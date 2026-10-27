@@ -1,0 +1,16 @@
+/dist/
+/index.html
+/公式输入台.html
+/checks/*.json
+/checks/*.jpg
+/checks/*.md
+/docs/superpowers/
+/.formuladesk-test-*/
+/.formuladesk-*.tmp
+/.vendor-download-*/
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db
+.env
+.env.*
