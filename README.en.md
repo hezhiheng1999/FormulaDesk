@@ -40,9 +40,8 @@ node --test
 python -m unittest discover -s tests -p "test_*.py"
 python build.py
 python checks/check_bundle.py
-python tools/package_release.py
 ```
 
-These checks need no third-party Python or Node packages. The release packager uses explicit file lists, excludes local receipts/caches, and writes SHA-256 sums. See [development](docs/development.md), [contributing](CONTRIBUTING.md), and [releasing](docs/releasing.md).
+These checks need no third-party Python or Node packages. Packaging is a separate release step; follow [releasing](docs/releasing.md) when preparing a new version. The packager uses explicit file lists, excludes local receipts/caches, and writes SHA-256 sums. See [project status and architecture](docs/project-context.md), [development](docs/development.md), and [contributing](CONTRIBUTING.md) (in Chinese).
 
 MIT licensed. Built on the pinned MathLive 0.111.1 release. Dependency and font notices are preserved in [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt) and embedded in the standalone HTML.

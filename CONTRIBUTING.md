@@ -4,15 +4,7 @@
 
 运行环境：Python 3.10+、Node.js 20+。日常使用者不需要它们。项目没有需要安装的 Python/Node 第三方依赖。
 
-提交改动前运行：
-
-```text
-node --test
-python -m unittest discover -s tests -p "test_*.py"
-python build.py
-python checks/check_bundle.py
-python tools/package_release.py
-```
+提交改动前按[开发说明](docs/development.md)运行适用检查。仅文档修改核对内容与链接；功能修改运行已有自动检查，并补充对应浏览器验证。制作发布包按[发布说明](docs/releasing.md)另行执行。
 
 修改界面或交互时，补充实际浏览器验证：输入和源码同步、Tab、清空与恢复、复制失败的手动路径、窄窗口。说明测试的系统、浏览器、输入和结果；模拟测试、静态检查与真实浏览器结果应分开记录。
 

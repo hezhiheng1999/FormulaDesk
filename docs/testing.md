@@ -1,8 +1,22 @@
 # 测试结果与手动检查
 
-本次本地记录日期：2026-10-27。版本：FormulaDesk 1.2.0 / MathLive 0.111.1。机器可读结果和成品 SHA-256 见 [verification.json](verification.json)。结果只覆盖该文件标识的 HTML 与下述环境。远程构建与测试结果单独见 [GitHub Actions](https://github.com/hezhiheng1999/FormulaDesk/actions)，应核对运行对应的提交。
+版本：FormulaDesk 1.2.0 / MathLive 0.111.1。以下分开记录当前工作树的自动检查和 v1.2.0 的历史发布验证；未重新执行的浏览器或远程 CI 检查不计入当前结果。
 
-## 已完成的检查
+## 当前工作树复核：2026-11-10
+
+独立项目迁移和文档整理后的检查环境：Windows、Node.js 24.18.0、Python 3.12.4。运行源码与 v1.2.0 相同。
+
+- Node 测试 34/34、Python 测试 18/18 通过；Python 测试包含临时副本构建和失败注入。
+- 离线构建与独立成品检查通过。HTML 为 1239551 字节，SHA-256 与下述历史报告一致；旧名称兼容文件内容相同。
+- 公开文件白名单、文档本地链接和常见个人路径/密钥形态检查通过；本机历史文件不在公开白名单内。
+- 复核两个历史发布 ZIP 的哈希，均与原 release-report.json 一致；没有重新打包。
+- 远程 main 与 v1.2.0 标签只读查询均指向 32f2e47d2558efd5b99a781ac36b02f5bed30f68；没有重新执行或核验远程 CI，也没有推送或发布。
+
+此次没有重测浏览器交互或系统剪贴板。迁移与文档整理的机器可读收据分别保存在忽略的 .local-history/migration-2026-11-10/ 和 .local-history/maintenance-2026-11-10/ 中，不替换历史报告。
+
+## v1.2.0 历史本地验证：2026-10-27
+
+机器可读结果和成品 SHA-256 见 [verification.json](verification.json)。该文件仍是原始发布验证记录，结果只覆盖它标识的 HTML 与下述环境。远程 CI 发布历史见[项目背景](project-context.md#发布基线与证据)；具体运行应核对对应提交。
 
 | 层次 | 环境与结果 | 能证明什么 |
 |---|---|---|
@@ -21,17 +35,7 @@
 
 ## 复现自动检查
 
-在项目根目录运行：
-
-~~~text
-node --test
-python -m unittest discover -s tests -p "test_*.py"
-python build.py
-python checks/check_bundle.py
-python tools/package_release.py
-~~~
-
-测试使用项目内独立临时副本；普通测试和构建不下载依赖。发布脚本检查实际公开文件的常见个人路径/密钥形态、文档链接、ZIP 成员白名单和 CRC。详见[开发说明](development.md)与[发布说明](releasing.md)。
+日常命令见[开发说明](development.md)。测试使用项目内独立临时副本，普通测试和构建不下载依赖。制作新版 ZIP 按[发布说明](releasing.md)另行执行；不要用重新打包代替日常检查，或覆盖现存的历史资产。
 
 ## 发布前手动检查
 
@@ -44,7 +48,7 @@ python tools/package_release.py
 
 ## 尚未完成的资格验证
 
-- 本次没有用自动化打开 file:// 文件，也没有验证 Windows 默认浏览器/启动脚本的实际窗口。HTTP 预览成功不代替这一步。
+- 尚未用自动化打开 file:// 文件，也未验证 Windows 默认浏览器/启动脚本的实际窗口。HTTP 预览成功不代替这一步。
 - Firefox、Safari、独立 Chrome/Edge、macOS、Linux、手机和平板尚未完成交互实测。
 - 浏览器原生离开页面提醒由浏览器策略决定，没有把触发条件检查等同于提醒窗口实际出现。
 - 本地记录不包含远程 GitHub Actions 结论。运行状态以对应提交的 Actions 记录为准；构建测试通过不代表该系统上的浏览器交互已完成实测。

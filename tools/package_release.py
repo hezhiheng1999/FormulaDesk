@@ -20,6 +20,7 @@ checker = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(checker)
 
 PUBLIC_FILES = {
+    "AGENTS.md", "docs/project-context.md",
     "README.md", "README.en.md", "LICENSE", "THIRD-PARTY-NOTICES.txt", "CHANGELOG.md", "CONTRIBUTING.md", "SECURITY.md",
     ".gitignore", ".gitattributes", "package.json", "dependency-receipt.json", "build.py", "index.html", "公式输入台.html",
     "open-formuladesk.cmd", "公式输入台.cmd",

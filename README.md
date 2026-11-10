@@ -47,7 +47,7 @@ python build.py
 
 ## 鲁棒性与数据保护
 
-- 输入或说明超过 10000 字符、显式括号分组超过 64 层、连续控制指令超过 64 个时，保留原文并暂停相应操作，不截断输入。
+- 公式和说明各限 10000 个 JavaScript 字符单位（UTF-16 代码单元），显式括号分组和连续控制指令各限 64。超限保留原文，并暂停相应操作，不截断输入。
 - 未完成或未识别的源码暂停预览，不用自动补全后的模型覆盖原文。
 - 链接和 HTML 扩展只作为源码保存；公式链接、朗读、远程字体与计算引擎入口被禁用。
 - 复制请求处理中避免重复请求；内容变化后会说明复制的是点击时的内容。
@@ -76,12 +76,11 @@ node --test
 python -m unittest discover -s tests -p "test_*.py"
 python build.py
 python checks/check_bundle.py
-python tools/package_release.py
 ~~~
 
-测试没有需要安装的第三方依赖。构建核对固定 MathLive 包的完整文件清单与哈希，使用原子替换写入 UTF-8/LF 的 HTML。发布脚本生成 portable/source ZIP 与 SHA-256 校验文件，使用显式白名单排除本机记录和缓存。
+测试没有需要安装的第三方依赖。构建核对固定 MathLive 包的完整文件清单与哈希，使用原子替换写入 UTF-8/LF 的 HTML。制作新版发布包另按[发布说明](docs/releasing.md)执行，不作为日常检查步骤。
 
-[开发说明](docs/development.md) · [测试结果与手动检查](docs/testing.md) · [发布说明](docs/releasing.md) · [贡献指南](CONTRIBUTING.md)
+[项目状态与架构](docs/project-context.md) · [开发说明](docs/development.md) · [测试结果与手动检查](docs/testing.md) · [贡献指南](CONTRIBUTING.md)
 
 GitHub Actions 提供跨系统构建与测试任务，实际结果见[运行记录](https://github.com/hezhiheng1999/FormulaDesk/actions)。检查与具体提交绑定；跨系统构建通过也不代表这些系统上的浏览器交互均已验证。
 
