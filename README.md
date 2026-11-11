@@ -7,7 +7,7 @@
 
 [下载便携版](https://github.com/hezhiheng1999/FormulaDesk/releases/latest) · [GitHub 仓库](https://github.com/hezhiheng1999/FormulaDesk) · [GitHub Actions](https://github.com/hezhiheng1999/FormulaDesk/actions)
 
-![FormulaDesk 界面](docs/images/preview.jpg)
+![FormulaDesk 界面](docs/images/preview.png)
 
 ## 适合谁
 

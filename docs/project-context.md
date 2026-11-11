@@ -9,7 +9,8 @@ FormulaDesk 是可离线使用的可视化 LaTeX 公式输入台。用户希望�
 ## 发布基线与证据
 
 - 仓库：[hezhiheng1999/FormulaDesk](https://github.com/hezhiheng1999/FormulaDesk)，默认分支 main。
-- 已发布版本：[v1.2.0](https://github.com/hezhiheng1999/FormulaDesk/releases/tag/v1.2.0)。起始提交为 32f2e47d2558efd5b99a781ac36b02f5bed30f68。
+- 本次版本：[v1.3.0](https://github.com/hezhiheng1999/FormulaDesk/releases/tag/v1.3.0)，包含 FD-001 的界面优化、公式库与键盘修复。发布状态见[任务管理](tasks.md)。
+- 首个历史版本：[v1.2.0](https://github.com/hezhiheng1999/FormulaDesk/releases/tag/v1.2.0)，起始提交为 32f2e47d2558efd5b99a781ac36b02f5bed30f68。
 - MathLive 0.111.1；项目、依赖和字体许可证随项目保留。
 - v1.2.0 HTML SHA-256：8af378741c18616cc3afb184a8fb9c14bc201c0357dc14a20d3b9c097394943d。
 - 历史本地验证：34 项 Node 测试、18 项 Python 测试、20 个浏览器场景；主分支与标签两轮远程 CI 均为 6/6。

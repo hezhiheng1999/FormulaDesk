@@ -28,7 +28,7 @@ PUBLIC_FILES = {
     "checks/check_bundle.py", "checks/preview.py",
     "tests/core.test.js", "tests/examples.test.js", "tests/test_build.py", "tests/test_release.py",
     "tools/package_release.py",
-    "docs/QUICKSTART.md", "docs/compatibility.md", "docs/development.md", "docs/releasing.md", "docs/testing.md", "docs/verification.json", "docs/images/preview.jpg",
+    "docs/QUICKSTART.md", "docs/compatibility.md", "docs/development.md", "docs/releasing.md", "docs/testing.md", "docs/verification.json", "docs/images/preview.png",
     ".github/workflows/ci.yml", ".github/ISSUE_TEMPLATE/bug_report.md", ".github/ISSUE_TEMPLATE/feature_request.md",
 } | {"vendor/" + name for name in builder.EXPECTED_ASSETS}
 

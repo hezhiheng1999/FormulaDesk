@@ -1,75 +1,88 @@
 {
-  "recorded_on": "2026-10-27",
+  "recorded_on": "2026-11-12",
   "project": "FormulaDesk",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "mathlive_version": "0.111.1",
-  "scope": "Local verification record. Remote CI results are recorded separately per commit.",
+  "scope": "Local verification of v1.3.0 over loopback HTTP. Remote CI is recorded separately per commit and tag.",
   "remote_ci_url": "https://github.com/hezhiheng1999/FormulaDesk/actions",
   "bundle": {
     "file": "index.html",
-    "sha256": "8af378741c18616cc3afb184a8fb9c14bc201c0357dc14a20d3b9c097394943d",
-    "bytes": 1239551
+    "sha256": "839ea5664c76d0e6b7f3b78fc8c8ea5d6cf6900ea7a0b328f1cbeb18036ef284",
+    "bytes": 1264480
   },
   "environment": {
     "os": "Windows",
-    "python": "3.12.14",
+    "python": "3.12.4",
     "node": "24.18.0",
     "node_minimum": "20",
     "browser": "Codex in-app Chromium",
     "browser_transport": "temporary loopback HTTP; explicit fixture routes only",
-    "wide_viewport": [1265, 720],
-    "narrow_frame_css_width": 520
+    "wide_viewport": [
+      1280,
+      720
+    ],
+    "narrow_viewports": [
+      [
+        375,
+        812
+      ],
+      [
+        520,
+        812
+      ]
+    ],
+    "same_origin_iframe_css_width": 520
   },
   "automated": {
-    "node_tests_passed": 34,
+    "node_tests_passed": 35,
     "python_tests_passed": 18,
     "independent_bundle_check": "passed",
     "optimized_python_checker": "covered by Python tests",
     "dependencies_installed": false,
     "network_dependency_fetch": false
   },
+  "browser_assertions_passed": 28,
   "browser_scenarios_passed": [
-    "empty_formula_disabled",
-    "fraction_and_tab",
-    "restore_formula_and_note_after_example_and_clear",
-    "incomplete_source_preserved_and_no_stale_preview",
-    "wrapped_source_and_preview_recovery",
-    "unclosed_delimiters_matrix_and_unknown_command_preserved",
-    "formula_links_and_html_extensions_source_only",
-    "overlong_formula_retained_and_blocked",
-    "overnested_formula_blocked",
-    "overlong_note_and_recovery",
-    "manual_copy_full_payload_selected",
-    "manual_native_copy_clipboard_roundtrip",
-    "clipboard_permission_denied_manual_copy_roundtrip",
-    "delayed_clipboard_duplicate_and_revision_guard",
-    "missing_renderer_source_edit_and_copy",
-    "matrix_navigation_and_tab_leaves_editor",
-    "mixed_brackets_supplementary_and_large_visual_paste_regressions",
-    "wide_layout_keyboard_and_copy_bounds",
-    "narrow_520px_full_renderer_layout_and_no_overflow",
-    "iframe_local_keyboard_initialization_and_bounds"
+    "version_labels_empty_formula_and_collapsed_panels",
+    "four_keyboard_layouts_fit_their_dynamic_host",
+    "greek_english_labels_retained",
+    "four_domains_two_pages_six_items_each_preserve_input",
+    "clear_then_direct_virtual_digit_and_root",
+    "fraction_placeholders_and_tab_exit",
+    "restore_formula_and_note",
+    "incomplete_source_preserved_preview_paused",
+    "corrected_source_resumes_preview_without_overwriting_raw_input",
+    "desktop_shortcuts_and_visible_keyboard_focus",
+    "375px_abc_bounds_clear_input_and_stacked_panels",
+    "520px_viewport_no_horizontal_overflow",
+    "clipboard_denied_manual_formula_and_note_payload",
+    "latex_only_manual_fallback_exact_raw_source",
+    "missing_renderer_source_edit_and_copy_available",
+    "520px_same_origin_iframe_visual_editor_initialization",
+    "extracted_portable_version_clear_digit_and_root"
   ],
   "clipboard_evidence": {
-    "native_manual_full_payload_readback": "exact match, including final rebuilt bundle",
-    "permission_denied_then_manual_readback": "exact match",
-    "automatic_write": "API completion and UI observed; OS payload not independently confirmed",
-    "delayed_copy": "controlled fixture; no real write implied",
+    "permission_denied_manual_payload": "complete formula and note retained in selected textarea",
+    "latex_only_manual_payload": "exact raw source",
+    "os_clipboard_roundtrip": "not independently verified for v1.3.0",
     "product_reads_clipboard": false
   },
   "release_validation": {
-    "source_zip_offline_rebuild": "same HTML SHA-256",
-    "same_environment_repeated_zip_bytes": "identical",
-    "archive_allowlist_crc_and_manifest": "passed",
+    "source_zip_offline_rebuild": "same HTML SHA-256; rechecked against final packages",
+    "portable_zip_extracted_browser_check": "passed via loopback HTTP; version and clear-then-key input checked on extracted HTML",
+    "same_environment_repeated_zip_bytes": "identical; rechecked against final packages",
+    "archive_allowlist_crc_and_manifest": "passed; portable 5 files, source 65 files",
     "public_text_scan_and_documentation_links": "passed",
-    "archive_hashes": "recorded in dist/release-report.json and SHA256SUMS.txt; recheck actual files before publishing"
+    "archive_hashes": "recorded separately in release-report.json and SHA256SUMS.txt"
   },
   "not_verified": [
-    "file URL opening and default-browser launcher window",
-    "standalone Chrome or Edge, Firefox, Safari",
-    "macOS, Linux, mobile browser interaction",
+    "file URL and default-browser launcher window",
+    "standalone Chrome or Edge, Firefox, Safari and physical mobile devices",
+    "macOS and Linux browser interaction",
+    "complete native hold-drag-release interaction for this release",
+    "keyboard gestures inside the same-origin iframe for this release",
     "native beforeunload prompt appearance",
-    "remote GitHub Actions execution is outside this local record",
+    "OS clipboard contents and target-application paste",
     "mathematical correctness or target model understanding"
   ]
 }
