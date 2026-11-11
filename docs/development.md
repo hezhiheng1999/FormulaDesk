@@ -5,6 +5,7 @@
 ```text
 src/core.js        输入规则、分隔符处理、长度/嵌套边界与复制文本
 src/app.js         MathLive、DOM、剪贴板、恢复与离开提醒
+src/examples.js    按领域分类的公式示例，与 app.js 合入同一应用脚本
 src/template.html  页面语义与控件
 src/app.css        响应式布局
 vendor/           MathLive 固定版本与字体，禁止手动修改
@@ -34,9 +35,9 @@ Python 测试在项目内创建独立临时副本，不修改真实 vendor/；�
 
 仅文档修改核对内容与链接即可；功能修改还需验证对应交互。当前结果和历史发布证据分别见[测试说明](testing.md)。若 Windows 的 `python` 命令落到不可用的应用执行别名，请使用已安装解释器的完整路径运行相同命令，无需修改项目或安装依赖。
 
-浏览器预览：`python checks/preview.py`。只绑定 127.0.0.1，终端显示临时地址，结束后按 Ctrl+C。`--fixtures` 另外启用明确标注的复制拒绝/延迟、组件缺失测试页面；这些页面用于测试，不进入便携包。
+浏览器预览：`python checks/preview.py`。只绑定 127.0.0.1，终端显示临时地址，结束后按 Ctrl+C。`--fixtures` 另外启用明确标注的复制拒绝/延迟、组件缺失及指针拖选测试页面；这些页面用于测试，不进入便携包。指针夹具在浏览器中向真实键盘节点发送按下、长按、移入和释放事件，用于验证拖选路径，不等同于完整原生鼠标移动实测。
 
-CI 定义在 `.github/workflows/ci.yml`，使用只读仓库权限、不保存 checkout 凭据，第三方 Actions 固定到提交。在三类系统和两种 Python 版本运行离线构建与测试；具体提交的执行结果见 [GitHub Actions](https://github.com/hezhiheng1999/FormulaDesk/actions)，配置文件本身不是通过证据。
+CI 定义在 `.github/workflows/ci.yml`，使用只读仓库权限、不保存 checkout 凭据，第三方 Actions 固定到提交。在三类系统和两种 Python 版本运行测试、离线构建与独立成品检查；`v` 开头的版本标签另外执行发布打包并检查验证报告绑定。日常分支推送可保留已发布版本的历史报告，打包器的拒绝条件仍由 Python 测试覆盖。具体提交的执行结果见 [GitHub Actions](https://github.com/hezhiheng1999/FormulaDesk/actions)，配置文件本身不是通过证据。
 
 发布脚本要求 docs/verification.json 的版本、HTML 哈希和字节数与当前构建一致，避免把旧验证报告与新成品一起发布。这只检查报告绑定关系，不会替维护者重新执行浏览器测试；运行行为改变后，应实际复测并更新报告。
 

@@ -7,14 +7,15 @@ from pathlib import Path
 import re
 
 PAGE_PATH = Path(__file__).resolve().parents[1] / "index.html"
-FIXTURES = {"/clipboard-denied.html", "/delayed-copy.html", "/no-renderer.html", "/narrow-frame.html"}
+FIXTURES = {"/clipboard-denied.html", "/delayed-copy.html", "/no-renderer.html", "/narrow-frame.html", "/gesture-test.html"}
 
 DELAYED_COPY = """<script>
 document.addEventListener("click", function(event) {
   const target = event.target.closest("button");
   if (!target || !["copy-prompt", "copy-latex"].includes(target.id)) return;
   Object.defineProperty(navigator, "clipboard", {configurable:true, value:{
-    writeText: function() {
+    writeText: function(text) {
+      document.getElementById("fixture-captured-copy").value = text;
       document.getElementById("fixture-status").textContent = "模拟复制请求正在等待";
       return new Promise(function(resolve) {
         window.addEventListener("fixture-finish-copy", resolve, {once:true});
@@ -32,6 +33,69 @@ window.addEventListener("DOMContentLoaded", function() {
   status.id = "fixture-status";
   status.textContent = "模拟复制请求尚未开始";
   document.body.appendChild(status);
+  const label = document.createElement("label");
+  label.htmlFor = "fixture-captured-copy";
+  label.textContent = "测试夹具：捕获复制参数（不写入系统剪贴板）";
+  document.body.appendChild(label);
+  const captured = document.createElement("textarea");
+  captured.id = "fixture-captured-copy";
+  captured.readOnly = true;
+  document.body.appendChild(captured);
+});
+</script>"""
+
+GESTURE_TEST = r"""<script>
+window.addEventListener("DOMContentLoaded", function() {
+  const button = document.createElement("button");
+  button.textContent = "测试夹具：按住并模拟拖选 ∌";
+  button.style.cssText = "position:fixed;top:10px;right:10px;z-index:10000";
+  document.body.appendChild(button);
+  const result = document.createElement("pre");
+  result.id = "fixture-gesture-result";
+  result.textContent = "等待指针事件测试";
+  document.body.appendChild(result);
+  button.addEventListener("pointerdown", async function(event) {
+    event.preventDefault();
+    result.textContent = "正在测试长按拖选";
+    const field = document.getElementById("formula");
+    field.focus();
+    const cap = Array.from(document.querySelectorAll(".MLK__keycap")).find(function(item) {
+      return item.getAttribute("aria-label") === "\\ni" && item.getBoundingClientRect().height > 0;
+    });
+    if (!cap) {
+      result.textContent = "失败：请先展开符号键盘";
+      throw new Error(result.textContent);
+    }
+    const before = document.getElementById("latex-source").value;
+    function pointer(type, target) {
+      const rect = target.getBoundingClientRect();
+      target.dispatchEvent(new PointerEvent(type, {
+        bubbles: type !== "pointerenter" && type !== "pointerleave", cancelable: true,
+        button: 0, buttons: type === "pointerup" ? 0 : 1,
+        pointerId: event.pointerId, pointerType: "mouse", isPrimary: true,
+        clientX: rect.x + rect.width / 2, clientY: rect.y + rect.height / 2
+      }));
+    }
+    pointer("pointerdown", cap);
+    await new Promise(function(resolve) { setTimeout(resolve, 600); });
+    const panel = document.querySelector(".MLK__variant-panel.is-visible");
+    const choice = panel && panel.querySelectorAll(".item")[1];
+    if (!choice) {
+      result.textContent = "失败：长按后没有两项变体菜单";
+      throw new Error(result.textContent);
+    }
+    const menuItems = panel.querySelectorAll(".item").length;
+    pointer("pointerleave", cap);
+    pointer("pointerenter", choice);
+    pointer("pointermove", choice);
+    pointer("pointerup", choice);
+    await new Promise(function(resolve) { setTimeout(resolve, 50); });
+    result.textContent = JSON.stringify({
+      completed: true, before: before, menuItems: menuItems,
+      source: document.getElementById("latex-source").value,
+      remainingMenus: document.querySelectorAll(".MLK__variant-panel.is-visible").length
+    });
+  });
 });
 </script>"""
 
@@ -55,6 +119,9 @@ class Preview(BaseHTTPRequestHandler):
         elif self.path == "/delayed-copy.html":
             last_script = text.rfind("<script>")
             text = text[:last_script] + DELAYED_COPY + text[last_script:]
+        elif self.path == "/gesture-test.html":
+            last_script = text.rfind("<script>")
+            text = text[:last_script] + GESTURE_TEST + text[last_script:]
         page = text.encode("utf-8")
         self.send_response(200)
         self.send_header("Content-Type", "text/html; charset=utf-8")

@@ -1,6 +1,14 @@
 # FormulaDesk 项目执行指引
 
-本目录是 FormulaDesk 唯一的日常开发与升级入口。先读 README.md、docs/project-context.md 和 docs/development.md；本机接手信息在忽略目录 .local-history/ 中。
+本目录是 FormulaDesk 唯一的日常开发与升级入口。先读 README.md、docs/project-context.md 和 docs/tasks.md 中的对应任务，按需读取 docs/development.md；本机接手信息在忽略目录 .local-history/ 中。
+
+## 串行对话管理
+
+- 管理对话负责需求、优先级和管理规则；每项独立改进或升级在本项目中新开执行对话，使用 `FD-001 · 具体目标` 格式。用户已确认目标并要求开始时直接创建，不重复确认是否新开对话。
+- 同一目标的实现、验证及相关修复留在原对话；独立新需求返回候选清单，另开对话。未选定目标时不创建执行对话。
+- 默认串行，同一时间只有一个执行对话修改项目；管理对话不同时改写共享文件。上一项实现、验证及文件状态交接完成后，再开始下一项。
+- docs/tasks.md 是任务范围、状态和交接的唯一清单。新对话核对实际 Git 基线与已有改动，完成后更新当前任务记录；对话编号、本机路径和过程日志留在 .local-history/。
+- 每个任务分别记录实现、验证、提交、推送和发布状态。任务编号不等于版本号；上一任务的 Git 授权不自动延续。
 
 ## 实现与数据
 
@@ -15,7 +23,7 @@
 默认 Windows / PowerShell，正确引用中文和空格路径。旧路径仅保留跳转；新根目录的具体位置与迁移收据见本机 .local-history/，不要将个人绝对路径写入公开文档。
 
 - 用户已授权的任务直接完成，少量文档修改只核对内容与链接；功能变化运行适用的已有测试并进行必要的浏览器验证。
-- 自动检查：node --test；python -m unittest discover -s tests -p "test_*.py"；python build.py；python checks/check_bundle.py。
+- 可用自动检查（按改动选择）：node --test；python -m unittest discover -s tests -p "test_*.py"；python build.py；python checks/check_bundle.py。
 - 普通构建和测试使用固定 vendor/，无需 npm install 或 pip install。新增依赖、联网能力、草稿存储和外部写入应说明具体影响并确认任务授权涵盖它们。
 - 复制 API 返回成功与目标剪贴板内容验证分开记录；构建/静态检查不代表浏览器交互或数学正确性。
 - 发布前更新版本、CHANGELOG、成品绑定的 docs/verification.json，并按 tools/package_release.py 白名单制作发布包。

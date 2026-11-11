@@ -11,6 +11,8 @@
   const status = byId("copy-status");
   const keyboardContainer = byId("keyboard-container");
   const keyboardToggle = byId("keyboard-toggle");
+  const keyboardLabel = byId("keyboard-label");
+  const outputPanel = byId("output-panel");
   const promptButton = byId("copy-prompt");
   const latexButton = byId("copy-latex");
   const manualButton = byId("manual-copy-button");
@@ -43,13 +45,44 @@
     return;
   }
 
-  const examples = {
-    fraction: { latex: "x=\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}", note: "a、b、c 为实数，且 a ≠ 0。请解释这个公式。" },
-    mean: { latex: "D=\\frac{1}{N}\\sum_{i=1}^{N}(y_i-r_i)^2", note: "y_i 和 r_i 是实数，N 是样本数。请解释各部分的含义。" },
-    complex: { latex: "\\lvert z\\rvert^2=I^2+Q^2", note: "z = I + jQ，I、Q 为实数，j² = -1。请解释复数模的平方。" },
-    integral: { latex: "E=\\int_{-\\infty}^{+\\infty}\\lvert x(t)\\rvert^2\\,\\mathrm{d}t", note: "这里 E 表示信号能量的数学定义。物理能量还需要说明 x(t) 的单位和标定。" },
-    matrix: { latex: "\\begin{bmatrix}y_1\\\\y_2\\end{bmatrix}=\\begin{bmatrix}a&b\\\\c&d\\end{bmatrix}\\begin{bmatrix}x_1\\\\x_2\\end{bmatrix}", note: "这里使用矩阵乘法。请展开两个输出分量。" },
-  };
+  const exampleGroups = window.FormulaDeskExamples;
+  const exampleDomains = byId("example-domains");
+  const exampleList = byId("example-list");
+  const examplePrev = byId("example-prev");
+  const exampleNext = byId("example-next");
+  const examplePageSize = 6;
+  let exampleGroupIndex = 0;
+  let examplePageIndex = 0;
+
+  function renderExamples() {
+    const group = exampleGroups[exampleGroupIndex];
+    const pages = Math.ceil(group.items.length / examplePageSize);
+    exampleList.replaceChildren();
+    group.items.slice(examplePageIndex * examplePageSize, (examplePageIndex + 1) * examplePageSize).forEach((example) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = example.title;
+      button.addEventListener("click", () => {
+        replaceContents(example, "已载入“" + example.title + "”。");
+        if (previewEditable && mf) mf.focus();
+      });
+      exampleList.appendChild(button);
+    });
+    byId("example-page").textContent = (examplePageIndex + 1) + " / " + pages;
+    examplePrev.disabled = examplePageIndex === 0;
+    exampleNext.disabled = examplePageIndex === pages - 1;
+    byId("example-panel").setAttribute("aria-labelledby", "example-domain-" + group.id);
+  }
+
+  function selectExampleGroup(index) {
+    exampleGroupIndex = index;
+    examplePageIndex = 0;
+    Array.from(exampleDomains.children).forEach((tab, tabIndex) => {
+      tab.setAttribute("aria-selected", String(tabIndex === index));
+      tab.tabIndex = tabIndex === index ? 0 : -1;
+    });
+    renderExamples();
+  }
 
   function snapshot() { return { latex: source.value, note: note.value }; }
 
@@ -77,11 +110,13 @@
 
   function hidePreview(reason) {
     previewEditable = false;
+    outputPanel.open = true;
+    byId("source-panel").open = true;
     if (mf) { mf.hidden = true; mf.readOnly = true; }
     if (keyboard && keyboard.visible) keyboard.hide();
     keyboardContainer.hidden = true;
     keyboardToggle.setAttribute("aria-expanded", "false");
-    keyboardToggle.textContent = "展开数学键盘";
+    keyboardLabel.textContent = "展开数学键盘";
     previewState.hidden = false;
     previewState.textContent = reason;
   }
@@ -95,7 +130,7 @@
     if (!analysis.preview) {
       hidePreview("预览已暂停。原文保留在 LaTeX 源码区。");
     } else if (!mf) {
-      hidePreview("排版组件未加载。仍可在右侧源码区编辑并复制 LaTeX。");
+      hidePreview("排版组件未加载。仍可在下方源码区编辑并复制 LaTeX。");
       warning = "排版组件不可用。请重新打开完整 HTML；当前输入会保留。";
     } else {
       try {
@@ -222,11 +257,57 @@
       keyboard = window.MathLive.initVirtualKeyboardInCurrentBrowsingContext();
       keyboard.container = keyboardContainer;
       keyboard.layouts = ["numeric", "symbols", "alphabetic", "greek"];
-      keyboard.addEventListener("virtual-keyboard-toggle", () => {
+      function readableKeycap(keycap) {
+        if (typeof keycap === "string") {
+          if (!/#[@0?]/.test(keycap)) return keycap;
+          keycap = { latex: keycap };
+        }
+        const result = { ...keycap };
+        const latex = keycap.latex || keycap.insert;
+        if (!keycap.label && typeof latex === "string" && /#[@0?]/.test(latex)) {
+          const argument = latex.includes("#@") ? (/[\^_]/.test(latex) ? "n" : "y") : "x";
+          const display = latex.replace(/#@/g, "{x}").replace(/#(?:0|\?)/g, "{" + argument + "}");
+          result.label = window.MathLive.convertLatexToMarkup(display);
+        }
+        if (keycap.shift) result.shift = readableKeycap(keycap.shift);
+        if (Array.isArray(keycap.variants)) result.variants = keycap.variants.map(readableKeycap);
+        return result;
+      }
+      // Keep readable keycaps and expose missing alternative menus, preserving
+      // insertion templates, selection markers and MathLive's Greek names.
+      keyboard.layouts = keyboard.normalizedLayouts.map((layout, index) => index === 3 ? layout : {
+        ...layout,
+        layers: layout.layers.map((layer) => ({
+          ...layer,
+          rows: layer.rows.map((row) => row.map((keycap) => {
+            const cap = readableKeycap(keycap);
+            if (index === 2 && ["5", "6", "8", "9", "0"].includes(cap.label)) {
+              cap.class = (cap.class ? cap.class + " " : "") + "hide-shift";
+            }
+            // A visible Shift preview should also be selectable by long press.
+            // Preserve existing families; supply a pair only when none exists.
+            if (cap.shift && !/(^|\s)hide-shift(\s|$)/.test(cap.class || "")) {
+              if (!cap.variants) {
+                const base = { ...cap };
+                delete base.shift;
+                cap.variants = [base, cap.shift];
+              }
+              cap.stickyVariantPanel = false;
+            }
+            return cap;
+          })),
+        })),
+      });
+      function syncKeyboard() {
         keyboardContainer.hidden = !keyboard.visible;
         keyboardToggle.setAttribute("aria-expanded", String(keyboard.visible));
-        keyboardToggle.textContent = keyboard.visible ? "收起数学键盘" : "展开数学键盘";
-      });
+        keyboardLabel.textContent = keyboard.visible ? "收起数学键盘" : "展开数学键盘";
+        // Alphabetic has five rows; other layouts can have four. MathLive
+        // bottom-aligns the plate, so a fixed-height host clips its top rows.
+        keyboardContainer.style.height = keyboard.visible ? Math.ceil(keyboard.boundingRect.height) + 1 + "px" : "0px";
+      }
+      keyboard.addEventListener("virtual-keyboard-toggle", syncKeyboard);
+      keyboard.addEventListener("geometrychange", syncKeyboard);
       mf.addEventListener("input", fromVisual);
       mf.addEventListener("undo-state-change", refreshControls);
       mf.addEventListener("keydown", (event) => {
@@ -237,6 +318,7 @@
         // With no placeholders, continue through the visible DOM controls.
         if (event.shiftKey) insertButtons[insertButtons.length - 1].focus();
         else if (!restoreButton.disabled) restoreButton.focus();
+        else if (!promptButton.disabled) promptButton.focus();
         else keyboardToggle.focus();
       }, { capture: true });
       mf.addEventListener("beforeinput", (event) => {
@@ -262,6 +344,7 @@
         if (!analysis.preview || !analysis.valid || unsupported || source.value.length + normalized.length > core.MAX_SOURCE_LENGTH) {
           event.preventDefault();
           replaceContents({ latex: normalized, note: note.value }, "粘贴内容已完整保留到源码区。");
+          outputPanel.open = true;
           byId("source-panel").open = true;
           source.focus();
         } else if (normalized !== raw) {
@@ -299,16 +382,49 @@
       fromVisual();
     });
   });
-  document.querySelectorAll("[data-example]").forEach((button) => {
-    button.disabled = false;
-    button.addEventListener("click", () => {
-      replaceContents(examples[button.dataset.example], "已载入示例。");
-      if (previewEditable && mf) mf.focus();
+  exampleGroups.forEach((group, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.id = "example-domain-" + group.id;
+    button.textContent = group.label;
+    button.setAttribute("role", "tab");
+    button.setAttribute("aria-controls", "example-panel");
+    button.addEventListener("click", () => selectExampleGroup(index));
+    button.addEventListener("keydown", (event) => {
+      let nextIndex;
+      if (event.key === "ArrowRight") nextIndex = (index + 1) % exampleGroups.length;
+      else if (event.key === "ArrowLeft") nextIndex = (index - 1 + exampleGroups.length) % exampleGroups.length;
+      else if (event.key === "Home") nextIndex = 0;
+      else if (event.key === "End") nextIndex = exampleGroups.length - 1;
+      else return;
+      event.preventDefault();
+      selectExampleGroup(nextIndex);
+      exampleDomains.children[nextIndex].focus();
     });
+    exampleDomains.appendChild(button);
+  });
+  selectExampleGroup(0);
+  examplePrev.addEventListener("click", () => {
+    examplePageIndex -= 1;
+    renderExamples();
+    if (examplePrev.disabled) exampleNext.focus();
+  });
+  exampleNext.addEventListener("click", () => {
+    examplePageIndex += 1;
+    renderExamples();
+    if (exampleNext.disabled) examplePrev.focus();
   });
   undoButton.addEventListener("click", () => { mf.executeCommand("undo"); fromVisual(); mf.focus(); });
   redoButton.addEventListener("click", () => { mf.executeCommand("redo"); fromVisual(); mf.focus(); });
-  clearButton.addEventListener("click", () => { replaceContents({ latex: "", note: "" }, "已清空。"); });
+  // Keep the mathfield connected to its keyboard while clearing with a pointer.
+  clearButton.addEventListener("pointerdown", (event) => { if (event.button === 0) event.preventDefault(); });
+  clearButton.addEventListener("click", () => {
+    replaceContents({ latex: "", note: "" }, "已清空。");
+    // Release the disabled button before MathLive starts its deferred focus;
+    // a later browser blur would otherwise cancel that focus request.
+    clearButton.blur();
+    if (previewEditable && mf) mf.focus();
+  });
   restoreButton.addEventListener("click", () => {
     if (!previous) return;
     const value = previous;
@@ -341,6 +457,6 @@
 
   source.disabled = false;
   renderSource();
-  message("先编辑公式，再复制。支持 LaTeX 的聊天、文档和编辑器都可以使用。");
+  message("先编辑公式，再复制。");
 })();
 

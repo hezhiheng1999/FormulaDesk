@@ -6,69 +6,113 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; font-src data:; img-src data:; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="description" content="FormulaDesk：离线可视化公式编辑器。实时排版，复制 LaTeX 或公式与说明，用于 AI 对话和文档。">
-  <title>公式输入台 · FormulaDesk</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%232c55cf'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-size='46' fill='white'%3E∑%3C/text%3E%3C/svg%3E">
+  <title>FormulaDesk · 公式输入台</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%23245dd8'/%3E%3Csvg x='6.5' y='6.5' width='27' height='27' viewBox='0 0 24 24'%3E%3Cpath d='M17 4c-3-1-5 .5-5.6 3.5l-2 10C8.8 20.5 7.5 21 5.5 20M7 10h9' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E%3C/svg%3E">
   <!-- FONT_STYLES -->
   <!-- APP_STYLES -->
   <!-- MATHLIVE_SCRIPT -->
   <!-- CORE_SCRIPT -->
 </head>
 <body>
+  <svg class="icon-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="icon-undo" viewBox="0 0 24 24"><path d="m9 5-5 5 5 5M4 10h9a6 6 0 0 1 0 12" transform="translate(0 -2)"/></symbol>
+    <symbol id="icon-redo" viewBox="0 0 24 24"><path d="m15 5 5 5-5 5m5-5h-9a6 6 0 0 0 0 12" transform="translate(0 -2)"/></symbol>
+    <symbol id="icon-trash" viewBox="0 0 24 24"><path d="M4 6h16M9 6V4h6v2M6 6l1 14h10l1-14M10 10v6m4-6v6"/></symbol>
+    <symbol id="icon-restore" viewBox="0 0 24 24"><path d="M4 11a8 8 0 1 1 2 6M4 5v6h6m2-4v5l3 2"/></symbol>
+    <symbol id="icon-fraction" viewBox="0 0 24 24"><path d="M5 12h14M10 4h4v4h-4zm0 12h4v4h-4z"/></symbol>
+    <symbol id="icon-root" viewBox="0 0 24 24"><path d="m3 13 4 5 4-14h10m-6 6 5 8m0-8-5 8"/></symbol>
+    <symbol id="icon-superscript" viewBox="0 0 24 24"><path d="m4 10 7 10m0-10L4 20m12-11V4m0 1c3-3 5-1 5 1v3"/></symbol>
+    <symbol id="icon-subscript" viewBox="0 0 24 24"><path d="m4 4 7 10m0-10L4 14m12 6v-5m0 1c3-3 5-1 5 1v3"/></symbol>
+    <symbol id="icon-sum" viewBox="0 0 24 24"><path d="M19 5H6l7 7-7 7h13"/></symbol>
+    <symbol id="icon-integral" viewBox="0 0 24 24"><path d="M17 4c-3-2-5 0-5 4v8c0 4-2 6-5 4"/></symbol>
+    <symbol id="icon-matrix" viewBox="0 0 24 24"><path d="M6 3H3v18h3M18 3h3v18h-3"/><circle cx="9" cy="8" r=".8"/><circle cx="15" cy="8" r=".8"/><circle cx="9" cy="16" r=".8"/><circle cx="15" cy="16" r=".8"/></symbol>
+    <symbol id="icon-absolute" viewBox="0 0 24 24"><path d="M4 4v16M20 4v16m-12-12 8 8m0-8-8 8"/></symbol>
+    <symbol id="icon-copy-notes" viewBox="0 0 24 24"><rect x="8" y="7" width="12" height="14" rx="2"/><path d="M15 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3m4-6h4m-4 4h4"/></symbol>
+    <symbol id="icon-code" viewBox="0 0 24 24"><path d="m7 7-5 5 5 5m10-10 5 5-5 5M14 4l-4 16"/></symbol>
+    <symbol id="icon-keyboard" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M7 16h10"/></symbol>
+    <symbol id="icon-chevron-left" viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></symbol>
+    <symbol id="icon-chevron-right" viewBox="0 0 24 24"><path d="m10 6 6 6-6 6"/></symbol>
+  </defs></svg>
   <noscript><p class="noscript-message">FormulaDesk 需要浏览器启用 JavaScript 才能编辑公式。打开此文件不会连接 AI 服务。</p></noscript>
   <header class="site-header">
-    <div class="brand"><span class="brand-mark" aria-hidden="true">ƒ</span><div><h1>公式输入台</h1><p>本地编辑，带进对话与文档。</p></div></div>
-    <div class="header-end"><span class="header-shortcut"><kbd>Tab</kbd> 跳空位 <span>·</span> <kbd>Ctrl</kbd> + <kbd>Enter</kbd> 复制</span><span class="local-tag"><span aria-hidden="true"></span>本地 · 离线</span></div>
+    <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M17 4c-3-1-5 .5-5.6 3.5l-2 10C8.8 20.5 7.5 21 5.5 20M7 10h9"/></svg></span><h1>FormulaDesk</h1></div>
+    <span class="local-tag"><span aria-hidden="true"></span>本地离线</span>
   </header>
 
   <main class="workspace">
     <section class="editor-card" aria-labelledby="editor-heading">
-      <div class="section-head"><div><p class="eyebrow">实时排版</p><h2 id="editor-heading">编辑公式</h2></div><div class="editor-actions"><button id="undo" class="icon-action" type="button" title="撤销公式编辑" aria-label="撤销" disabled>↶</button><button id="redo" class="icon-action" type="button" title="重做公式编辑" aria-label="重做" disabled>↷</button><span class="action-separator"></span><button id="clear" class="text-button" type="button" disabled>清空</button></div></div>
+      <div class="section-head"><h2 id="editor-heading">实时排版</h2><div class="editor-actions"><button id="undo" class="icon-action" type="button" title="撤销公式编辑" aria-label="撤销" disabled><svg class="icon" aria-hidden="true"><use href="#icon-undo"/></svg></button><button id="redo" class="icon-action" type="button" title="重做公式编辑" aria-label="重做" disabled><svg class="icon" aria-hidden="true"><use href="#icon-redo"/></svg></button><span class="action-separator" aria-hidden="true"></span><button id="clear" class="text-button" type="button" disabled><svg class="icon" aria-hidden="true"><use href="#icon-trash"/></svg>清空</button></div></div>
       <div class="formula-tools" aria-label="插入公式结构">
-        <button type="button" data-insert="\frac{#0}{#0}" aria-label="插入分数" disabled><span class="tool-symbol">a⁄b</span><span>分数</span></button>
-        <button type="button" data-insert="\sqrt{#0}" aria-label="插入根号" disabled><span class="tool-symbol">√x</span><span>根号</span></button>
-        <button type="button" data-insert="#@^{#0}" aria-label="插入上标" disabled><span class="tool-symbol">xⁿ</span><span>上标</span></button>
-        <button type="button" data-insert="#@_{#0}" aria-label="插入下标" disabled><span class="tool-symbol">xₙ</span><span>下标</span></button>
-        <button type="button" data-insert="\sum_{#0}^{#0}#0" aria-label="插入求和" disabled><span class="tool-symbol">∑</span><span>求和</span></button>
-        <button type="button" data-insert="\int_{#0}^{#0}#0\,\mathrm{d}x" aria-label="插入积分" disabled><span class="tool-symbol">∫</span><span>积分</span></button>
-        <button type="button" data-insert="\begin{bmatrix}#0 &amp; #0 \\ #0 &amp; #0\end{bmatrix}" title="插入 2×2 矩阵" aria-label="插入矩阵" disabled><span class="tool-symbol">[⁙]</span><span>矩阵</span></button>
-        <button type="button" data-insert="\left|#0\right|" aria-label="插入模" disabled><span class="tool-symbol">|x|</span><span>模</span></button>
+        <button type="button" data-insert="\frac{#0}{#0}" aria-label="插入分数" disabled><svg class="icon" aria-hidden="true"><use href="#icon-fraction"/></svg><span>分数</span></button>
+        <button type="button" data-insert="\sqrt{#0}" aria-label="插入根号" disabled><svg class="icon" aria-hidden="true"><use href="#icon-root"/></svg><span>根号</span></button>
+        <button type="button" data-insert="#@^{#0}" aria-label="插入上标" disabled><svg class="icon" aria-hidden="true"><use href="#icon-superscript"/></svg><span>上标</span></button>
+        <button type="button" data-insert="#@_{#0}" aria-label="插入下标" disabled><svg class="icon" aria-hidden="true"><use href="#icon-subscript"/></svg><span>下标</span></button>
+        <button type="button" data-insert="\sum_{#0}^{#0}#0" aria-label="插入求和" disabled><svg class="icon" aria-hidden="true"><use href="#icon-sum"/></svg><span>求和</span></button>
+        <button type="button" data-insert="\int_{#0}^{#0}#0\,\mathrm{d}x" aria-label="插入积分" disabled><svg class="icon" aria-hidden="true"><use href="#icon-integral"/></svg><span>积分</span></button>
+        <button type="button" data-insert="\begin{bmatrix}#0 &amp; #0 \\ #0 &amp; #0\end{bmatrix}" title="插入 2×2 矩阵" aria-label="插入矩阵" disabled><svg class="icon" aria-hidden="true"><use href="#icon-matrix"/></svg><span>矩阵</span></button>
+        <button type="button" data-insert="\left|#0\right|" aria-label="插入模" disabled><svg class="icon" aria-hidden="true"><use href="#icon-absolute"/></svg><span>模</span></button>
       </div>
       <div id="mathfield-host" class="mathfield-host"><p id="preview-state" role="status">正在准备公式编辑器…</p></div>
-      <div class="editor-foot"><span>直接打字，或使用模板。<button id="restore" class="text-button restore-button" type="button" disabled>恢复上次内容</button></span><button id="keyboard-toggle" class="text-button" type="button" aria-expanded="false" aria-controls="keyboard-container" disabled>展开数学键盘</button></div>
+      <div class="editor-foot"><button id="restore" class="text-button restore-button" type="button" disabled><svg class="icon" aria-hidden="true"><use href="#icon-restore"/></svg>恢复上次内容</button><div class="editor-copy-actions"><button id="copy-prompt" class="icon-action copy-primary" type="button" title="复制公式与说明" aria-label="复制公式与说明" disabled><svg class="icon" aria-hidden="true"><use href="#icon-copy-notes"/></svg></button><button id="copy-latex" class="icon-action" type="button" title="仅复制 LaTeX" aria-label="仅复制 LaTeX" disabled><svg class="icon" aria-hidden="true"><use href="#icon-code"/></svg></button><span class="action-separator" aria-hidden="true"></span><button id="keyboard-toggle" class="text-button" type="button" aria-expanded="false" aria-controls="keyboard-container" disabled><svg class="icon" aria-hidden="true"><use href="#icon-keyboard"/></svg><span id="keyboard-label">展开数学键盘</span></button></div></div>
       <div id="keyboard-container" class="keyboard-container" hidden></div>
       <p id="syntax-status" class="syntax-status" role="status" aria-live="polite"></p>
+      <div class="copy-feedback"><p id="copy-status" class="copy-status" role="status" aria-live="polite">先编辑公式，再复制。</p><button id="manual-copy-button" class="text-button" type="button" disabled>手动复制</button></div>
+      <div id="manual-copy" class="manual-copy" hidden><label for="manual-copy-text">点击时的完整内容（已选中）</label><textarea id="manual-copy-text" readonly spellcheck="false"></textarea></div>
     </section>
 
-    <aside class="side-column" aria-label="复制公式">
-      <section class="output-card" aria-labelledby="output-heading">
-        <div class="section-head"><div><p class="eyebrow">带进对话与文档</p><h2 id="output-heading">复制公式</h2></div><span class="format-tag">LaTeX</span></div>
-        <div class="note-heading"><label for="formula-note">补充说明 <span>可选</span></label></div>
-        <textarea id="formula-note" class="note-input" placeholder="变量含义、单位，或你想问的问题。" rows="4" aria-describedby="note-limit"></textarea>
+    <section class="examples-card" aria-labelledby="examples-heading"><div class="examples-heading"><h2 id="examples-heading">常用公式</h2></div>
+      <div id="example-domains" class="example-domains" role="tablist" aria-label="公式使用领域"></div>
+      <div id="example-panel" role="tabpanel" tabindex="0"><div id="example-list" class="example-list"></div></div>
+      <nav class="example-pagination" aria-label="常用公式翻页"><button id="example-prev" class="icon-action" type="button" title="上一页" aria-label="上一页" disabled><svg class="icon" aria-hidden="true"><use href="#icon-chevron-left"/></svg></button><span id="example-page" role="status" aria-live="polite"></span><button id="example-next" class="icon-action" type="button" title="下一页" aria-label="下一页" disabled><svg class="icon" aria-hidden="true"><use href="#icon-chevron-right"/></svg></button></nav>
+    </section>
+
+    <details id="output-panel" class="disclosure-card"><summary>LaTeX源码和补充说明</summary><div class="output-content">
+      <details id="source-panel" class="source-panel" open><summary>LaTeX 源码 <span id="source-count">0 / 10000</span></summary>
+        <label class="sr-only" for="latex-source">LaTeX 源码</label>
+        <textarea id="latex-source" class="source-input" placeholder="粘贴或编辑 LaTeX" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="source-limit" disabled></textarea>
+        <span id="source-limit" class="sr-only">公式最多 10000 字符，显式括号分组最多 64 层，连续控制指令最多 64 个。超限时保留原文并暂停预览和复制。</span>
+      </details>
+      <div class="note-panel"><div class="note-heading"><label for="formula-note">补充说明 <span>可选</span></label></div>
+        <textarea id="formula-note" class="note-input" placeholder="变量含义、单位，或你想问的问题" rows="4" aria-describedby="note-limit"></textarea>
         <span id="note-limit" class="sr-only">最多 10000 字符，超过后暂停复制，不截断原文。</span>
-        <div class="copy-actions"><button id="copy-prompt" class="primary-button" type="button" disabled><span aria-hidden="true">⧉</span> 复制公式与说明</button><button id="copy-latex" class="secondary-button" type="button" disabled>仅复制 LaTeX</button></div>
-        <div class="copy-alternative"><p class="shortcut-hint">回到目标输入框，按 <kbd>Ctrl</kbd> + <kbd>V</kbd>。</p><button id="manual-copy-button" class="text-button" type="button" disabled>手动复制</button></div>
-        <p id="copy-status" class="copy-status" role="status" aria-live="polite">先编辑公式，再复制。</p>
-        <div id="manual-copy" class="manual-copy" hidden><label for="manual-copy-text">以下是点击时的完整内容；按 Ctrl+C 复制。</label><textarea id="manual-copy-text" readonly spellcheck="false"></textarea></div>
-        <details id="source-panel" class="source-panel" open><summary>LaTeX 源码 <span>可编辑 · 保留原文</span><span id="source-count">0 / 10000</span></summary>
-          <label class="sr-only" for="latex-source">LaTeX 源码</label>
-          <textarea id="latex-source" class="source-input" placeholder="也可以在这里粘贴 LaTeX；支持完整的公式分隔符。" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="source-limit" disabled></textarea>
-          <span id="source-limit" class="sr-only">公式最多 10000 字符，显式括号分组最多 64 层，连续控制指令最多 64 个。超限时保留原文并暂停预览和复制。</span>
-        </details>
-        <p class="privacy-note">不保存草稿，不调用 AI。复制后请在目标输入框核对内容。</p>
-      </section>
-    </aside>
-
-    <section class="examples-card" aria-labelledby="examples-heading"><div class="examples-heading"><h2 id="examples-heading">试一个例子</h2><p class="section-description">替换后可恢复上次内容</p></div>
-      <div class="example-list">
-        <button type="button" data-example="fraction" disabled><span><strong>分式与根号</strong><small>求根公式</small></span></button>
-        <button type="button" data-example="mean" disabled><span><strong>求和与均值</strong><small>均方误差</small></span></button>
-        <button type="button" data-example="complex" disabled><span><strong>复数与模</strong><small>模的平方</small></span></button>
-        <button type="button" data-example="integral" disabled><span><strong>定积分</strong><small>信号能量</small></span></button>
-        <button type="button" data-example="matrix" disabled><span><strong>矩阵</strong><small>矩阵与向量</small></span></button>
       </div>
-    </section>
+    </div></details>
   </main>
-  <div class="help-wrap"><details id="how-to" class="help-card"><summary><span>使用方法与打开方式</span><span class="help-summary-hint">操作步骤 · 输入边界 · 下次如何打开</span></summary><div class="help-content"><ol><li><span>编辑</span><p>打字、用数学键盘，或粘贴 LaTeX。源码不完整时会暂停预览并保留原文。</p></li><li><span>复制</span><p>选择纯 LaTeX 或公式与说明。自动复制无效时使用“手动复制”。</p></li><li><span>粘贴检查</span><p>在支持文本或 LaTeX 的对话、文档中粘贴，再检查符号和作用范围。</p></li></ol><div class="help-tip"><strong>以后如何打开？</strong><p>解压便携包，双击 index.html；Windows 也可双击 open-formuladesk.cmd。用浏览器收藏此页即可再次打开。</p><p>支持分式、根号、上下标、求和、积分与矩阵；不检查数学正确性，不识别图片，不执行链接、HTML 扩展或公式朗读。刷新前请复制需要保留的内容。</p></div></div></details></div>
+  <div class="help-wrap"><details id="how-to" class="disclosure-card help-card"><summary>使用方法</summary><div class="help-content"><div class="help-guide"><h3>操作步骤</h3><ol>
+    <li><strong>写公式</strong><p>在编辑区直接输入，或选择分数、根号等模板。键盘中央是单击输入的符号，右上角灰色小标签提示 Shift 次级符号。长按有变体的按键，保持按住并移到目标符号，松开即可输入；移到选项外松开则取消。模板上的 x、n 是示意，点击后仍可填写。</p></li>
+    <li><strong>选公式、加说明</strong><p>按领域浏览常用公式，点击后会替换当前公式和说明。清空或替换后可点“恢复上次内容”。展开“LaTeX源码和补充说明”可编辑 LaTeX、补充变量含义和单位。</p></li>
+    <li><strong>复制到目标应用</strong><p><svg class="icon" aria-hidden="true"><use href="#icon-copy-notes"/></svg> 复制公式与说明，附带先复述公式、检查歧义的提示；<svg class="icon" aria-hidden="true"><use href="#icon-code"/></svg> 仅复制原始 LaTeX。</p></li>
+    <li><strong>粘贴后核对</strong><p>在目标对话或文档中粘贴，检查符号、上下标和作用范围。自动复制无效时，点“手动复制”，再复制选中的文本。</p></li>
+  </ol><div class="help-tip"><p><strong>源码与输入边界</strong>　支持裸 LaTeX、完整数学分隔符与单个 LaTeX 代码块。源码不完整或指令未识别时，保留原文并暂停预览。公式与说明各限 10000 个字符单位，显式括号分组和连续控制指令各限 64；超限暂停相应操作，不截断输入。</p><p><strong>关闭前先复制</strong>　内容仅保留在当前页面，不保存草稿，不调用 AI。工具不检查数学推导或单位，也不识别图片。复制提示表示浏览器请求的结果，请以目标应用中实际粘贴的内容为准。</p></div></div>
+  <section class="shortcuts-panel" aria-labelledby="shortcuts-heading"><h3 id="shortcuts-heading">快捷键</h3><p class="shortcut-platform">Windows / Linux 使用 Ctrl，macOS 使用 ⌘；Alt 在 Mac 键盘上对应 ⌥。编辑快捷键作用于当前获得焦点的公式或输入框。</p>
+    <div class="shortcut-group"><h4>导航与选择</h4><dl class="shortcut-list">
+      <dt><kbd>Shift</kbd> / 屏幕 <kbd>⇧</kbd></dt><dd>按住实体 Shift 切换次级符号；屏幕 ⇧ 单击切换下一次输入，双击锁定，再点取消。</dd>
+      <dt><kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd></dt><dd>前往下一个 / 上一个模板空位；没有空位时按页面顺序移动焦点。</dd>
+      <dt><kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd></dt><dd>在公式结构中移动光标，例如分子、分母和上下标。</dd>
+      <dt><kbd>Shift</kbd> + 方向键</dt><dd>沿对应方向扩展选区。</dd>
+      <dt><kbd>Home</kbd> / <kbd>End</kbd></dt><dd>移到公式首尾；加 Shift 扩展选区。Mac 也可用 ⌘ + ← / →。</dd>
+      <dt>领域标签上的方向键</dt><dd>← / → 切换相邻领域；Home / End 切换到第一个 / 最后一个领域。</dd>
+    </dl></div>
+    <div class="shortcut-group"><h4>编辑与复制</h4><dl class="shortcut-list">
+      <dt><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>A</kbd></dt><dd>全选当前编辑区内容。</dd>
+      <dt><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Z</kbd></dt><dd>撤销当前编辑区的编辑。</dd>
+      <dt><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd></dt><dd>重做；Windows / Linux 也可用 Ctrl + Y。</dd>
+      <dt><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>C</kbd></dt><dd>复制选区；也用于复制“手动复制”框中选中的文本。</dd>
+      <dt><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>X</kbd></dt><dd>剪切当前选区。</dd>
+      <dt><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>V</kbd></dt><dd>粘贴剪贴板内容。</dd>
+      <dt><kbd>Backspace</kbd> / <kbd>Delete</kbd></dt><dd>删除光标前 / 后的内容，或删除选区。</dd>
+      <dt><kbd>Ctrl</kbd> / <kbd>⌘</kbd> + <kbd>Enter</kbd></dt><dd>复制整条公式与补充说明，与编辑区的“复制公式与说明”按钮相同。</dd>
+    </dl></div>
+    <div class="shortcut-group"><h4>公式结构与命令输入</h4><dl class="shortcut-list">
+      <dt><kbd>^</kbd> / <kbd>_</kbd> / <kbd>/</kbd></dt><dd>在公式中输入上标 / 下标 / 分数。</dd>
+      <dt><kbd>\</kbd> / <kbd>Esc</kbd></dt><dd>在公式区进入 LaTeX 命令输入；再次按 Esc 确认并退出命令输入。</dd>
+      <dt>命令输入时 <kbd>↑</kbd> / <kbd>↓</kbd></dt><dd>选择上一条 / 下一条自动补全建议。</dd>
+      <dt>命令输入时 <kbd>Tab</kbd> / <kbd>Enter</kbd></dt><dd>接受当前建议 / 确认完整命令。</dd>
+      <dt>命令输入时 <kbd>Shift</kbd> + <kbd>Esc</kbd></dt><dd>取消本次命令输入。</dd>
+      <dt>矩阵中 <kbd>Alt</kbd> + <kbd>Tab</kbd></dt><dd>向右增加一列；再加 Shift 则向左增加一列。系统若截获 Alt + Tab，此组合不会到达页面。</dd>
+      <dt>矩阵中 <kbd>Alt</kbd> + <kbd>Enter</kbd></dt><dd>向下增加一行；再加 Shift 则向上增加一行。</dd>
+    </dl></div>
+  </section></div></details></div>
   <footer class="site-footer"><span>FormulaDesk <!-- APP_VERSION --> · MathLive 0.111.1</span><span>MIT 开源 · 本地编辑 · 以目标输入框中的内容为准</span></footer>
   <!-- APP_SCRIPT -->
 </body>
