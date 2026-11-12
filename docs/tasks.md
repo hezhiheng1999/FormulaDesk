@@ -49,6 +49,7 @@
 - 边界：其他 DPI、多屏及 Windows 10 未实测；Codex 自身输入框未由工具自动操作，用户已确认当前版本可用。系统菜单的最小化后直接最大化组合仅有源码守卫。
 - 发布版本：v1.4.0，Windows 完整 ZIP、EXE、独立网页 ZIP、源码 ZIP、摘要与发布报告。EXE 需配合 ZIP 中的同目录组件运行，SDK 与许可证完整保留，缓存不进入公开包。
 - 代码与发布状态：实现提交 9e0d6e9、CI 临时目录规范化修复 f7f4441 均已推送；v1.4.0 标签指向 f7f4441。[Release](https://github.com/hezhiheng1999/FormulaDesk/releases/tag/v1.4.0) 已公开发布 Windows ZIP、EXE、网页 ZIP、源码 ZIP、校验清单和报告共 6 个附件，下载回读摘要全部匹配。[主分支 CI](https://github.com/hezhiheng1999/FormulaDesk/actions/runs/43241818684) 与[标签 CI](https://github.com/hezhiheng1999/FormulaDesk/actions/runs/43242289060) 均 6/6 通过。旧版本 ZIP 保持原字节。
+- 收尾复核：文档提交 ef86994 的 [CI](https://github.com/hezhiheng1999/FormulaDesk/actions/runs/43242814788) 已 6/6 全部通过，此前排队的 macOS 3.10 任务已成功完成，原待核验项已关闭。
 
 ## 启动、实施与交接
 
