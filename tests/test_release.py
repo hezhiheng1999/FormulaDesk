@@ -65,7 +65,7 @@ class ReleaseTests(unittest.TestCase):
         files = {name: expected if name in release.builder.OUTPUT_NAMES else (ROOT / name).read_bytes()
                  for name in release.PUBLIC_FILES}
         with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
+            root = Path(temporary).resolve()
             for name, data in files.items():
                 target = root / name
                 target.parent.mkdir(parents=True, exist_ok=True)
