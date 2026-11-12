@@ -2,6 +2,7 @@
 
 (() => {
   const core = window.FormulaDeskCore;
+  const desktop = window.FormulaDeskDesktop;
   const byId = (id) => document.getElementById(id);
   const source = byId("latex-source");
   const note = byId("formula-note");
@@ -37,6 +38,7 @@
   function message(text, type = "") {
     status.textContent = text;
     status.className = "copy-status" + (type ? " " + type : "");
+    if (desktop) desktop.dirty(!safeToLeave);
   }
 
   if (!core) {
@@ -110,6 +112,7 @@
 
   function hidePreview(reason) {
     previewEditable = false;
+    if (desktop) desktop.select("source");
     outputPanel.open = true;
     byId("source-panel").open = true;
     if (mf) { mf.hidden = true; mf.readOnly = true; }
@@ -190,6 +193,7 @@
     manualRevision = capturedRevision;
     manualIncludesNote = includeNote;
     manualCopy.hidden = false;
+    if (desktop) desktop.select("source");
     manualText.focus();
     manualText.select();
   }
@@ -275,12 +279,18 @@
       }
       // Keep readable keycaps and expose missing alternative menus, preserving
       // insertion templates, selection markers and MathLive's Greek names.
-      keyboard.layouts = keyboard.normalizedLayouts.map((layout, index) => index === 3 ? layout : {
+      keyboard.layouts = keyboard.normalizedLayouts.map((layout, index) => ({
         ...layout,
+        displayShiftedKeycaps: true,
+        displayEditToolbar: !desktop,
         layers: layout.layers.map((layer) => ({
           ...layer,
           rows: layer.rows.map((row) => row.map((keycap) => {
-            const cap = readableKeycap(keycap);
+            const cap = index === 3 ? { ...keycap } : readableKeycap(keycap);
+            if (index === 3) {
+              cap.class = (cap.class ? cap.class + " " : "") + "greek-keycap";
+              return cap;
+            }
             if (index === 2 && ["5", "6", "8", "9", "0"].includes(cap.label)) {
               cap.class = (cap.class ? cap.class + " " : "") + "hide-shift";
             }
@@ -297,11 +307,12 @@
             return cap;
           })),
         })),
-      });
+      }));
       function syncKeyboard() {
         keyboardContainer.hidden = !keyboard.visible;
         keyboardToggle.setAttribute("aria-expanded", String(keyboard.visible));
         keyboardLabel.textContent = keyboard.visible ? "收起数学键盘" : "展开数学键盘";
+        keyboardToggle.title = keyboardLabel.textContent;
         // Alphabetic has five rows; other layouts can have four. MathLive
         // bottom-aligns the plate, so a fixed-height host clips its top rows.
         keyboardContainer.style.height = keyboard.visible ? Math.ceil(keyboard.boundingRect.height) + 1 + "px" : "0px";
@@ -344,6 +355,7 @@
         if (!analysis.preview || !analysis.valid || unsupported || source.value.length + normalized.length > core.MAX_SOURCE_LENGTH) {
           event.preventDefault();
           replaceContents({ latex: normalized, note: note.value }, "粘贴内容已完整保留到源码区。");
+          if (desktop) desktop.select("source");
           outputPanel.open = true;
           byId("source-panel").open = true;
           source.focus();
@@ -458,5 +470,10 @@
   source.disabled = false;
   renderSource();
   message("先编辑公式，再复制。");
+  if (desktop && keyboard && previewEditable) {
+    keyboardContainer.hidden = false;
+    mf.focus();
+    keyboard.show();
+  }
 })();
 

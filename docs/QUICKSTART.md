@@ -1,12 +1,12 @@
 # FormulaDesk 快速使用
 
-1. 将整个 portable ZIP 解压到一个文件夹。
-2. 用浏览器打开 index.html。Windows 也可以双击 open-formuladesk.cmd。
+1. Windows 浮窗下载 win-x64.zip；独立网页下载 portable.zip。将整个 ZIP 解压到可写文件夹。
+2. 浮窗双击 FormulaDesk.exe；网页用浏览器打开 index.html，Windows 也可双击 open-formuladesk.cmd。
 3. 在公式区输入，或使用模板与数学键盘；已有 LaTeX 可粘贴到源码区。
 4. 选“复制公式与说明”或“仅复制 LaTeX”，在目标输入框粘贴并核对。
 5. 自动复制无效时，点“手动复制”，按 Ctrl+C，再到目标输入框粘贴。
 
-无需安装、账号、API Key、Python、Node.js 或本地服务。资源全部内嵌，可以断网使用。加入浏览器收藏便于下次打开。
+无需安装本工具、账号、API Key、Python、Node.js 或本地服务，可以断网使用。Windows 浮窗依赖已有的 .NET Framework 4.8 系列和系统 WebView2 Runtime，默认置顶，图钉控制开关。下载页单独的 EXE 需要 ZIP 的其余文件；请优先下载完整 ZIP。网页可加入浏览器收藏。
 
 清空或载入示例后，可点“恢复上次内容”找回上一组公式与说明。源码未写完或超限时会保留原文，并显示具体提示。
 

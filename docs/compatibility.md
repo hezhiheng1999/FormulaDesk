@@ -12,6 +12,7 @@
 
 | 环境 | 使用方式 | 验证状态 |
 |---|---|---|
+| Windows 10/11 x64 + .NET Framework 4.8 + 系统 WebView2 | 完整解压 win-x64 ZIP 后双击 FormulaDesk.exe | Windows 11、100% 缩放、WebView2 157 已实测；其他 DPI、多屏和 Windows 10 未实测 |
 | Windows + Chromium 类浏览器 | 解压后双击 index.html | 2026-10-27 内置 Chromium 的 HTTP 预览已实测；本地文件启动尚未完成实测 |
 | macOS / Linux + 浏览器 | 解压后双击 index.html | 设计支持；尚无这些系统的交互实测记录 |
 | Firefox / Safari | 打开独立 HTML | 尚未完成浏览器实测；自动复制可能受限制，可用手动复制 |
@@ -19,6 +20,8 @@
 | 手机 / 平板 | 浏览器可尝试打开 HTML | 虚拟键盘由 MathLive 提供；不宣称完成移动系统认证 |
 
 不依赖 Codex、ChatGPT、Claude 等应用的专有接口。只要目标接受文本，就能粘贴；不保证目标渲染 LaTeX，也不会改变目标应用的输入框。
+
+浮窗正常状态使用 Windows 11 系统圆角，最大化时遵循系统窗口样式。Windows 10 不承诺系统圆角。浮窗在解压目录建立 WebView2Data 缓存，输入仍只在当前窗口保留；无需安装完整 WebView2 SDK。
 
 ## 输入与行为边界
 

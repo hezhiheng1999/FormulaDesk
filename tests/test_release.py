@@ -1,9 +1,12 @@
 import importlib.util
 import io
 import json
+import hashlib
 from pathlib import Path
 import unittest
 import zipfile
+import tempfile
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("formuladesk_release", ROOT / "tools" / "package_release.py")
@@ -12,6 +15,64 @@ spec.loader.exec_module(release)
 
 
 class ReleaseTests(unittest.TestCase):
+    def windows_fixture(self, root):
+        files = {name: b"fixture" for name in release.WINDOWS_FILES - {"windows-manifest.json"}}
+        files["app/index.html"] = b"verified HTML"
+        manifest = {"version": "1.4.0", "sdk": release.SDK_VERSION, "architecture": "x64",
+                    "files": {name: hashlib.sha256(data).hexdigest() for name, data in files.items()}}
+        files["windows-manifest.json"] = json.dumps(manifest).encode("utf-8")
+        for name, data in files.items():
+            target = root / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
+        bundle = {"sha256": hashlib.sha256(files["app/index.html"]).hexdigest(), "bytes": len(files["app/index.html"])}
+        return files, manifest, bundle
+
+    def test_windows_allowlist_omits_runtime_cache_and_rejects_corruption(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            files, _, bundle = self.windows_fixture(root)
+            (root / "WebView2Data").mkdir()
+            (root / "WebView2Data/cache").write_bytes(b"private runtime cache")
+            self.assertEqual(release.windows_sources(root, "1.4.0", bundle), files)
+            (root / "FormulaDesk.exe").write_bytes(b"corrupted executable")
+            with self.assertRaisesRegex(ValueError, "digest differs"):
+                release.windows_sources(root, "1.4.0", bundle)
+
+    def test_windows_release_rejects_mixed_html_and_stale_version(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            _, _, bundle = self.windows_fixture(root)
+            with self.assertRaisesRegex(ValueError, "version"):
+                release.windows_sources(root, "1.3.0", bundle)
+            with self.assertRaisesRegex(ValueError, "HTML differs"):
+                release.windows_sources(root, "1.4.0", {"sha256": "a" * 64, "bytes": 13})
+
+    def test_windows_release_rejects_missing_loader_and_unlisted_members(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            _, manifest, bundle = self.windows_fixture(root)
+            manifest["files"]["../outside"] = "a" * 64
+            (root / "windows-manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "allowlist"):
+                release.windows_sources(root, "1.4.0", bundle)
+            (root / "runtimes/win-x64/native/WebView2Loader.dll").unlink()
+            with self.assertRaises(FileNotFoundError):
+                release.windows_sources(root, "1.4.0", bundle)
+
+    def test_public_source_files_rebuild_current_html(self):
+        expected = release.builder.render()
+        files = {name: expected if name in release.builder.OUTPUT_NAMES else (ROOT / name).read_bytes()
+                 for name in release.PUBLIC_FILES}
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for name, data in files.items():
+                target = root / name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(data)
+            with mock.patch.object(release.builder, "ROOT", root), mock.patch.object(release.builder, "VENDOR", root / "vendor"):
+                self.assertEqual(release.builder.render(), expected)
+
     def test_stale_verification_cannot_be_packaged(self):
         current = {"sha256": "a" * 64, "bytes": 100}
         recorded = {"version": "1.2.0", "bundle": dict(current)}

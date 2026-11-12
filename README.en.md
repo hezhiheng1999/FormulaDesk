@@ -8,7 +8,9 @@ A portable, offline visual LaTeX editor for AI conversations and documents. Writ
 
 ## Run
 
-Download a portable ZIP from the [latest release](https://github.com/hezhiheng1999/FormulaDesk/releases/latest), extract it completely, and open `index.html` in a browser. On Windows, `open-formuladesk.cmd` opens that file with the default browser. No account, API key, runtime installation, package manager, or background server is required.
+**Windows floating window:** download `formuladesk-1.4.0-win-x64.zip` from the [latest release](https://github.com/hezhiheng1999/FormulaDesk/releases/latest), extract it completely to a writable folder, and double-click `FormulaDesk.exe`. Requires Windows 10/11 x64, .NET Framework 4.8 and an existing system WebView2 Runtime. The pin starts enabled. Copy, click the destination input and paste. The separate EXE attachment requires the files from the ZIP and cannot run alone. Runtime cache is stored in the adjacent `WebView2Data` folder; formulas are not saved.
+
+**Browser edition:** extract `formuladesk-1.4.0-portable.zip` and open `index.html`. On Windows, `open-formuladesk.cmd` opens it with the default browser. No account, API key, package manager, or background server is required.
 
 A prepared source ZIP also contains the generated HTML. When cloning the source repository, run `python build.py` using Python 3.10+. Build dependencies are vendored, so the normal build is offline. Node.js 20+ is required only for tests.
 

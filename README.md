@@ -2,12 +2,12 @@
 
 离线可视化 LaTeX 编辑器。边输入边看公式，再复制到 AI 对话、Markdown 或文档。
 
-**不需要安装、账号、API Key 或后台服务。** 全部脚本与字体打包在一个 HTML 文件里。
+**不需要安装、账号、API Key 或后台服务。** 提供 Windows 置顶浮窗和独立网页两种入口，网页脚本与字体全部内嵌。
 [English overview](README.en.md) · [快速使用](docs/QUICKSTART.md) · [兼容性与边界](docs/compatibility.md)
 
 [下载便携版](https://github.com/hezhiheng1999/FormulaDesk/releases/latest) · [GitHub 仓库](https://github.com/hezhiheng1999/FormulaDesk) · [GitHub Actions](https://github.com/hezhiheng1999/FormulaDesk/actions)
 
-![FormulaDesk 界面](docs/images/preview.png)
+![FormulaDesk Windows 浮窗](docs/images/windows.jpg)
 
 ## 适合谁
 
@@ -19,7 +19,9 @@
 
 ## 获取与打开
 
-**使用者：** 从[发布页](https://github.com/hezhiheng1999/FormulaDesk/releases/latest)获取 portable ZIP，完整解压，双击 `index.html`，用浏览器打开。Windows 也可双击 `open-formuladesk.cmd`。不要双击压缩包内的文件直接运行。
+**Windows 浮窗：** 从[发布页](https://github.com/hezhiheng1999/FormulaDesk/releases/latest)下载 `formuladesk-1.4.0-win-x64.zip`，完整解压到可写文件夹，双击 `FormulaDesk.exe`。需要 Windows 10/11 x64、.NET Framework 4.8 系列及系统 WebView2 Runtime；本机实测 Windows 11。浮窗默认置顶，点击图钉可关闭；复制后点击目标应用输入框粘贴。Release 单独附带的 EXE 是主程序，需要 ZIP 中的同目录资源和组件，不能单独运行。
+
+**独立网页：** 下载 `formuladesk-1.4.0-portable.zip`，完整解压，双击 `index.html`。Windows 也可双击 `open-formuladesk.cmd`。不要直接运行压缩包内的文件。
 
 如果拿到的是已制作好的 source ZIP，其中也带有成品 HTML，可以直接打开。通过 Git 克隆源码则先按下面步骤构建；仓库不保存自动生成的 HTML。
 
@@ -65,7 +67,7 @@ python build.py
 
 ## 更新、卸载与再次打开
 
-用浏览器收藏本地页面即可下次打开；移动文件夹后可能要重新收藏。更新时将新版解压到单独文件夹，验证后再替换旧版。卸载只需删除解压出的工具文件夹，不涉及注册表或服务。
+Windows 浮窗直接再次运行 EXE，网页可加入浏览器收藏。移动文件夹后可能要重新收藏。更新时将新版完整解压到单独文件夹，验证后再替换旧版。退出程序后删除解压目录即可卸载，不涉及注册表或服务。Windows 运行缓存位于同目录 WebView2Data，工具不保存公式草稿。
 
 旧本地名称 `公式输入台.html` 与同名启动文件仍可使用；构建会生成与 index.html 内容相同的兼容文件。
 
@@ -87,4 +89,6 @@ GitHub Actions 提供跨系统构建与测试任务，实际结果见[运行记�
 ## 许可证与依赖
 
 项目代码采用 [MIT](LICENSE)。基于 [MathLive](https://github.com/arnog/mathlive) 0.111.1，字体随其发布包提供。所有依赖固定版本，保留完整性记录和[第三方声明](THIRD-PARTY-NOTICES.txt)。自有代码、依赖和字体的许可证也嵌入成品 HTML。
+
+Windows 包另含固定版本 Microsoft.Web.WebView2 SDK 1.0.4314.35 的运行组件及 licenses/ 下的许可证和声明；系统 WebView2 Runtime 不随包分发。
 

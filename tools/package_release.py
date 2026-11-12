@@ -10,10 +10,12 @@ import os
 import tempfile
 import urllib.parse
 import zipfile
+import argparse
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 import build as builder
+from tools.build_windows import SDK_FILES, SDK_VERSION
 
 spec = importlib.util.spec_from_file_location("formuladesk_bundle_check", ROOT / "checks" / "check_bundle.py")
 checker = importlib.util.module_from_spec(spec)
@@ -24,16 +26,23 @@ PUBLIC_FILES = {
     "README.md", "README.en.md", "LICENSE", "THIRD-PARTY-NOTICES.txt", "CHANGELOG.md", "CONTRIBUTING.md", "SECURITY.md",
     ".gitignore", ".gitattributes", "package.json", "dependency-receipt.json", "build.py", "index.html", "公式输入台.html",
     "open-formuladesk.cmd", "公式输入台.cmd",
-    "src/core.js", "src/app.js", "src/examples.js", "src/template.html", "src/app.css",
+    "src/core.js", "src/app.js", "src/desktop.js", "src/examples.js", "src/template.html", "src/app.css",
+    "src/windows/Program.cs", "src/windows/WindowHeight.cs", "src/windows/app.manifest", "src/windows/app.config",
+    "src/windows/CreateIcon.cs", "src/windows/PinToggle.cs",
+    "tools/build_windows.py", "tests/test_windows.py", "tests/desktop.test.js",
     "checks/check_bundle.py", "checks/preview.py",
     "tests/core.test.js", "tests/examples.test.js", "tests/test_build.py", "tests/test_release.py",
     "tools/package_release.py",
-    "docs/QUICKSTART.md", "docs/compatibility.md", "docs/development.md", "docs/releasing.md", "docs/testing.md", "docs/verification.json", "docs/images/preview.png",
+    "docs/QUICKSTART.md", "docs/compatibility.md", "docs/development.md", "docs/releasing.md", "docs/testing.md", "docs/verification.json", "docs/images/preview.png", "docs/images/windows.jpg",
     ".github/workflows/ci.yml", ".github/ISSUE_TEMPLATE/bug_report.md", ".github/ISSUE_TEMPLATE/feature_request.md",
 } | {"vendor/" + name for name in builder.EXPECTED_ASSETS}
 
 PORTABLE_FILES = {"index.html", "open-formuladesk.cmd", "LICENSE", "THIRD-PARTY-NOTICES.txt"}
-TEXT_SUFFIXES = {".md", ".txt", ".js", ".css", ".html", ".py", ".json", ".yml", ".cmd"}
+TEXT_SUFFIXES = {".md", ".txt", ".js", ".css", ".html", ".py", ".json", ".yml", ".cmd", ".cs", ".config", ".manifest"}
+WINDOWS_FILES = set(SDK_FILES.values()) | {
+    "FormulaDesk.exe", "FormulaDesk.exe.config", "app/index.html", "LICENSE",
+    "THIRD-PARTY-NOTICES.txt", "使用说明.txt", "windows-manifest.json",
+}
 SENSITIVE_PATTERNS = [
     re.compile(r"[A-Za-z]:[\\/](?:Users|CodexProject|Ananconda)[\\/][A-Za-z0-9_.\u4e00-\u9fff-]+"),
     re.compile(r"/Users/[A-Za-z0-9_.-]+/"),
@@ -149,7 +158,30 @@ def write_release_file(path, contents):
             temporary.unlink()
 
 
-def package():
+def windows_sources(directory, version, bundle):
+    directory = Path(directory)
+    files = {}
+    for name in sorted(WINDOWS_FILES):
+        path = directory / name
+        if path.is_symlink() or not path.resolve().is_relative_to(directory.resolve()):
+            raise ValueError("Windows file leaves its directory: " + name)
+        files[name] = path.read_bytes()
+    manifest = json.loads(files["windows-manifest.json"])
+    if manifest.get("version") != version or manifest.get("sdk") != SDK_VERSION or manifest.get("architecture") != "x64":
+        raise ValueError("Windows manifest version, SDK or architecture differs")
+    if set(manifest.get("files", {})) != WINDOWS_FILES - {"windows-manifest.json"}:
+        raise ValueError("Windows manifest differs from the allowlist")
+    for name, digest in manifest["files"].items():
+        if hashlib.sha256(files[name]).hexdigest() != digest:
+            raise ValueError("Windows manifest digest differs: " + name)
+    html = files["app/index.html"]
+    if hashlib.sha256(html).hexdigest() != bundle["sha256"] or len(html) != bundle["bytes"]:
+        raise ValueError("Windows HTML differs from the verified bundle")
+    scan_public(files)
+    return files
+
+
+def package(windows_directory=None):
     builder.build()
     bundle = checker.check(ROOT)
     files = public_sources()
@@ -163,17 +195,28 @@ def package():
         "formuladesk-" + version + "-portable.zip": (portable, archive_bytes(portable, prefix)),
         "formuladesk-" + version + "-source.zip": (files, archive_bytes(files, prefix)),
     }
+    assets = {}
+    if windows_directory is not None:
+        windows = windows_sources(windows_directory, version, bundle)
+        windows_name = "formuladesk-" + version + "-win-x64.zip"
+        releases[windows_name] = (windows, archive_bytes(windows, prefix))
+        assets["FormulaDesk.exe"] = windows["FormulaDesk.exe"]
     destination = ROOT / "dist"
     if destination.is_symlink() or not destination.resolve().is_relative_to(ROOT):
         raise ValueError("dist resolves outside the project")
     destination.mkdir(exist_ok=True)
-    report = {"version": version, "bundle": bundle, "archives": []}
+    report = {"version": version, "bundle": bundle, "archives": [], "assets": []}
     sums = []
     for name, (members, contents) in sorted(releases.items()):
         inspect_archive(contents, members, prefix)
         digest = hashlib.sha256(contents).hexdigest()
         write_release_file(destination / name, contents)
         report["archives"].append({"file": name, "sha256": digest, "bytes": len(contents), "members": sorted(members)})
+        sums.append(digest + "  " + name)
+    for name, contents in sorted(assets.items()):
+        digest = hashlib.sha256(contents).hexdigest()
+        write_release_file(destination / name, contents)
+        report["assets"].append({"file": name, "sha256": digest, "bytes": len(contents)})
         sums.append(digest + "  " + name)
     write_release_file(destination / "SHA256SUMS.txt", ("\n".join(sums) + "\n").encode("utf-8"))
     write_release_file(destination / "release-report.json", (json.dumps(report, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
@@ -182,4 +225,6 @@ def package():
 
 
 if __name__ == "__main__":
-    package()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--windows-dir", type=Path, help="Validated Windows build directory containing FormulaDesk.exe")
+    package(parser.parse_args().windows_dir)

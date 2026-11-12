@@ -1,6 +1,6 @@
 # 开发与构建
 
-源码根目录需要 Python 3.10+、Node.js 20+。不需要 npm install、pip install、编译器或服务。运行资源已固定并包含在 vendor/。
+网页版构建需要 Python 3.10+，测试需要 Node.js 20+。运行资源已固定并包含在 vendor/，普通 HTML 构建离线完成。
 
 ```text
 src/core.js        输入规则、分隔符处理、长度/嵌套边界与复制文本
@@ -44,3 +44,15 @@ CI 定义在 `.github/workflows/ci.yml`，使用只读仓库权限、不保存 c
 `python tools/package_release.py` 会生成并替换同版本的 dist/ 文件，不属于日常检查。dist/ 可保留不同版本的 ZIP，汇总清单与报告对应最近制作的版本；新版打包前归档旧汇总文件，保留历史 ZIP。文档整理不重新打包，新版本按[发布说明](releasing.md)执行。
 
 依赖升级时请核对上游公开版本、包完整性、资产清单和许可证，然后重跑测试与浏览器检查。MathLive 的 URL、朗读和下载入口必须保持禁用。新增能力不要依赖未记录的全局安装或某位开发者的文件路径。
+
+## Windows 浮窗构建
+
+[Windows 构建入口](../tools/build_windows.py) 使用系统 .NET Framework x64 C# 编译器编译 [宿主源码](../src/windows/Program.cs)，并把原版居中 f 图标嵌入 EXE。使用者需要 Windows 10/11 x64、.NET Framework 4.8 系列和系统 WebView2 Runtime，完整解压后双击 FormulaDesk.exe。标题栏图钉在最小化按钮左侧，默认开启置顶，蓝色直立和灰色倾斜分别表示开启和关闭。Alt+空格或右键标题栏也可打开窗口菜单。首次运行在解压目录内生成 WebView2Data 缓存，输入在当前窗口中编辑和复制。
+
+开发者先从微软 NuGet 取得 Microsoft.Web.WebView2 1.0.4314.35 的 nupkg。构建脚本每次核对固定的整包 SHA-512，再使用其 net462 托管程序集和 x64 loader。指定本地 SDK 文件和输出目录即可离线重建；产品版本从 package.json 写入 EXE 和文件清单。
+
+```text
+python tools/build_windows.py --sdk-package path/to/microsoft.web.webview2.1.0.4314.35.nupkg --output .local-history/windows-trial
+```
+
+产物包括 FormulaDesk/FormulaDesk.exe、windows-manifest.json 和版本化的 win-x64 ZIP。正式发布还需按[发布说明](releasing.md)将整个构建目录交给公开白名单打包器，绑定 EXE、SDK 与已验证 HTML，排除运行缓存。网页仍由 build.py 从 src/ 生成。发布状态见 [FD-002 任务记录](tasks.md)。

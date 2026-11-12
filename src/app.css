@@ -67,6 +67,8 @@ math-field::part(virtual-keyboard-toggle), math-field::part(menu-toggle) { displ
 .keyboard-container { position: relative; height: 0; border-top: 1px solid var(--border); --keyboard-background: #eceef2; --keyboard-toolbar-background: #e5e8ed; --keyboard-toolbar-background-hover: #d9dfe8; --keyboard-toolbar-background-selected: #f9fafc; --keyboard-toolbar-text: #646c7a; --keyboard-toolbar-text-active: var(--blue); --keyboard-accent-color: var(--blue); --keycap-background: #fff; --keycap-background-hover: #f7f9fe; --keycap-background-pressed: #dce6fa; --keycap-text: #303747; --keycap-text-hover: var(--blue); --keycap-text-pressed: #203d7a; --keycap-border: 1px solid #dfe3ea; --keycap-border-bottom: 1px solid #cdd3de; --keycap-secondary-background: #dce1e9; --keycap-secondary-background-hover: #cdd6e5; --keycap-secondary-text: #596577; --keycap-secondary-border: 1px solid #d1d7e1; --keycap-secondary-border-bottom: 1px solid #bdc6d4; --keycap-primary-background: #e1e9fb; --keycap-primary-background-hover: #ceddfa; --keycap-primary-text: var(--blue); --keycap-shift-color: #646c79; --keycap-shift-font-size: 10px; --keycap-height: 44px; --keyboard-zindex: 5; --keyboard-padding-top: 0px; --keyboard-padding-bottom: 0px; }
 .keyboard-container .MLK__keycap > .MLK__shift { top: 3px; right: 3px; min-width: 16px; padding: 1px 3px; border: 1px solid #d9dfe8; border-radius: 4px; background: #f1f3f7; color: #646c79; font-size: 10px; line-height: 1.2; text-align: center; pointer-events: none; }
 .keyboard-container .MLK__shift .ML__latex { font-size: 1em; }
+.keyboard-container .MLK__keycap:not(.hide-shift):not(.is-active):not(.is-pressed) > .MLK__shift { display: block; }
+.keyboard-container .MLK__rows .greek-keycap > aside { display: block; max-width: 100%; font-size: 9px; line-height: 10px; white-space: normal; overflow-wrap: anywhere; }
 .syntax-status { color: #a64b21; font-size: 12px; }
 .syntax-status:not(:empty) { padding: 9px 22px; background: #fff8ed; border-top: 1px solid #f4e3c4; }
 .copy-feedback { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 9px 24px; background: var(--surface); border-top: 1px solid #eceef2; }
@@ -178,3 +180,40 @@ math-field[hidden], [hidden] { display: none !important; }
   .help-card ol { grid-template-columns: minmax(0, 1fr); gap: 16px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+
+/* Desktop host shares the editor and keeps its first screen compact. */
+html.desktop { scrollbar-gutter: auto; }
+.desktop body { background: var(--page); }
+.desktop .site-header, .desktop .site-footer, .desktop .help-wrap { display: none; }
+.desktop .workspace { display: block; max-width: none; padding: 4px; }
+.desktop .editor-card { border-radius: 10px; margin-bottom: 8px; box-shadow: none; }
+.desktop .section-head { display: none; }
+.desktop .formula-tools { padding: 3px 8px; }
+.desktop .formula-tools button { padding: 4px 2px; min-height: 32px; }
+.desktop .formula-tools button span { display: none; }
+.desktop .mathfield-host { min-height: 66px; padding: 6px 12px; }
+.desktop math-field { font-size: 28px; min-height: 52px; padding-block: 6px; }
+.desktop math-field::part(content) { overflow-x: auto; scrollbar-width: thin; scrollbar-color: #b9c1cf transparent; }
+.desktop .editor-foot { padding: 2px 6px; min-height: 34px; gap: 3px; }
+.desktop .editor-foot .icon-action { width: 30px; height: 30px; padding: 5px; }
+.desktop .editor-foot .text-button { padding: 4px 6px; }
+.desktop .restore-button, .desktop #keyboard-label { font-size: 0; }
+.desktop #keyboard-toggle { gap: 0; }
+.desktop .editor-card { overflow: visible; }
+.desktop .note-heading { display: flex; align-items: center; justify-content: space-between; }
+.desktop .copy-feedback { padding: 0; }
+.desktop .keyboard-container { --variant-panel-background: #fff; --variant-keycap-text: #303747; --variant-keycap-text-active: #245dd8; --variant-keycap-background-active: #edf2fe; }
+.desktop .MLK__rows .MLK__keycap:has(> .MLK__shift):not(.hide-shift) { padding-top: 16px; font-size: 22px; }
+.desktop .keyboard-container .MLK__keycap > .MLK__shift { top: 0; right: 2px; min-width: 12px; padding: 0 2px; font-size: 9px; line-height: 1.1; }
+.desktop .syntax-status { margin: 0; padding-inline: 10px; }
+.desktop .syntax-status:empty { display: none; }
+.desktop #desktop-tabs { width: 100%; margin: 0; justify-content: space-between; }
+.desktop #desktop-tabs button { padding: 6px 10px; }
+.desktop #desktop-tabs button.selected { background: var(--paper); color: var(--blue); border-color: var(--border); }
+.desktop #desktop-panels { padding-top: 8px; }
+.desktop #output-panel > summary, .desktop #how-to > summary { display: none; }
+.desktop .examples-card { padding: 8px 0; }
+.desktop .examples-heading { display: none; }
+.desktop .output-content { padding: 12px; gap: 10px; }
+.desktop .note-input, .desktop .source-input { min-height: 104px; }
+.desktop .help-content { border-top: 0; padding: 12px; }

@@ -1,88 +1,75 @@
 {
   "recorded_on": "2026-11-12",
   "project": "FormulaDesk",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "mathlive_version": "0.111.1",
-  "scope": "Local verification of v1.3.0 over loopback HTTP. Remote CI is recorded separately per commit and tag.",
+  "scope": "FD-002 user-accepted desktop UI; fresh v1.4.0 Windows build and WebView2 regression. Historical browser tests are not counted as new tests.",
   "remote_ci_url": "https://github.com/hezhiheng1999/FormulaDesk/actions",
   "bundle": {
     "file": "index.html",
-    "sha256": "839ea5664c76d0e6b7f3b78fc8c8ea5d6cf6900ea7a0b328f1cbeb18036ef284",
-    "bytes": 1264480
+    "sha256": "221c646d275c858e42ac60959951c2fd4a8dc4bf04671b1a715b4131b63a21f9",
+    "bytes": 1271671
   },
   "environment": {
-    "os": "Windows",
+    "os": "Windows 11 x64",
+    "build": "10.0.26300",
+    "display_scale_percent": 100,
     "python": "3.12.4",
-    "node": "24.18.0",
-    "node_minimum": "20",
-    "browser": "Codex in-app Chromium",
-    "browser_transport": "temporary loopback HTTP; explicit fixture routes only",
-    "wide_viewport": [
-      1280,
-      720
-    ],
-    "narrow_viewports": [
-      [
-        375,
-        812
-      ],
-      [
-        520,
-        812
-      ]
-    ],
-    "same_origin_iframe_css_width": 520
+    "node": "v24.18.0",
+    "webview2": "157.0.4341.42",
+    "webview2_sdk": "1.0.4314.35",
+    "exe_version": "1.4.0.0"
   },
   "automated": {
-    "node_tests_passed": 35,
-    "python_tests_passed": 18,
+    "node_tests_passed": 36,
+    "python_tests_passed": 24,
     "independent_bundle_check": "passed",
-    "optimized_python_checker": "covered by Python tests",
+    "public_sources": 76,
     "dependencies_installed": false,
     "network_dependency_fetch": false
   },
-  "browser_assertions_passed": 28,
-  "browser_scenarios_passed": [
-    "version_labels_empty_formula_and_collapsed_panels",
-    "four_keyboard_layouts_fit_their_dynamic_host",
-    "greek_english_labels_retained",
-    "four_domains_two_pages_six_items_each_preserve_input",
-    "clear_then_direct_virtual_digit_and_root",
-    "fraction_placeholders_and_tab_exit",
-    "restore_formula_and_note",
-    "incomplete_source_preserved_preview_paused",
-    "corrected_source_resumes_preview_without_overwriting_raw_input",
-    "desktop_shortcuts_and_visible_keyboard_focus",
-    "375px_abc_bounds_clear_input_and_stacked_panels",
-    "520px_viewport_no_horizontal_overflow",
-    "clipboard_denied_manual_formula_and_note_payload",
-    "latex_only_manual_fallback_exact_raw_source",
-    "missing_renderer_source_edit_and_copy_available",
-    "520px_same_origin_iframe_visual_editor_initialization",
-    "extracted_portable_version_clear_digit_and_root"
+  "fresh_desktop_scenarios_passed": [
+    "native_v1_4_exe_startup_and_version",
+    "compact_margins_and_accessible_feedback",
+    "exclusive_panels_expand_switch_and_restore_height",
+    "formula_and_note_clear_restore",
+    "incomplete_raw_source_preserved",
+    "clipboard_refusal_selects_manual_payload",
+    "white_variant_panel_hold_drag_select_and_cancel",
+    "31_greek_names_visible_and_unclipped"
+  ],
+  "user_acceptance": {
+    "confirmed": true,
+    "scope": "Fourth FD-002 trial accepted; final UI source retained for v1.4.0"
+  },
+  "prior_fd002_acceptance": [
+    "Explorer_double_click_and_f_icon",
+    "pin_two_states_and_native_window_menu",
+    "title_drag_and_edge_resize",
+    "minimize_maximize_restore_560x483",
+    "400px_margins_and_25_hints_no_overlap",
+    "560px_and_400px_31_greek_names",
+    "long_formula_horizontal_scroll",
+    "two_copy_modes_match_in_isolated_native_textbox",
+    "network_offline_local_reload"
   ],
   "clipboard_evidence": {
-    "permission_denied_manual_payload": "complete formula and note retained in selected textarea",
-    "latex_only_manual_payload": "exact raw source",
-    "os_clipboard_roundtrip": "not independently verified for v1.3.0",
+    "fresh_release": "clipboard API rejection followed by selected manual payload",
+    "os_clipboard_roundtrip": "Verified in earlier FD-002 trials with an isolated native textbox; not rerun for the version-label-only rebuild",
     "product_reads_clipboard": false
   },
   "release_validation": {
-    "source_zip_offline_rebuild": "same HTML SHA-256; rechecked against final packages",
-    "portable_zip_extracted_browser_check": "passed via loopback HTTP; version and clear-then-key input checked on extracted HTML",
-    "same_environment_repeated_zip_bytes": "identical; rechecked against final packages",
-    "archive_allowlist_crc_and_manifest": "passed; portable 5 files, source 65 files",
-    "public_text_scan_and_documentation_links": "passed",
-    "archive_hashes": "recorded separately in release-report.json and SHA256SUMS.txt"
+    "windows_manifest_version_sdk_architecture_digests_and_html_binding": "passed",
+    "archive_allowlist_crc": "passed; browser portable 5, source 76, Windows 12 members",
+    "source_zip_offline_rebuild": "passed; same HTML SHA-256",
+    "windows_zip_extracted_double_click": "passed; 560x483 native window",
+    "asset_hashes": "recorded in release-report.json; post-publication download comparison recorded in local publication receipt"
   },
   "not_verified": [
-    "file URL and default-browser launcher window",
-    "standalone Chrome or Edge, Firefox, Safari and physical mobile devices",
-    "macOS and Linux browser interaction",
-    "complete native hold-drag-release interaction for this release",
-    "keyboard gestures inside the same-origin iframe for this release",
-    "native beforeunload prompt appearance",
-    "OS clipboard contents and target-application paste",
-    "mathematical correctness or target model understanding"
+    "Other display scales, multiple monitors and Windows 10 interaction",
+    "macOS/Linux and independent browser interaction for v1.4.0",
+    "Minimized window directly maximized using system menu",
+    "Automated paste into Codex itself",
+    "Mathematical correctness or target model understanding"
   ]
 }

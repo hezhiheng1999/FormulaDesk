@@ -1,6 +1,6 @@
 # 制作与发布
 
-本次版本为 v1.3.0，v1.2.0 的原始 ZIP 继续保留。发布脚本会替换同版本的 ZIP，并更新汇总校验清单和报告；制作新版前先将旧版汇总文件归档至本机历史目录。日常开发、迁移或文档整理不运行打包。
+本次版本为 v1.4.0，既有 v1.2.0、v1.3.0 的原始 ZIP 继续保留。发布脚本会替换同版本的文件，并更新汇总校验清单和报告；制作新版前先将旧版汇总文件归档至本机历史目录。日常开发、迁移或文档整理不运行打包。
 
 ## 制作新版本
 
@@ -10,11 +10,19 @@
 4. 将 portable ZIP 完整解压到新目录验证使用；将 source ZIP 解压后离线重建，核对 HTML 哈希。portable ZIP 面向使用者，source ZIP 包含源码、固定依赖与成品。
 5. 检查实际 ZIP 清单、文档、许可证、截图和差异。脚本的公开白名单排除本机历史、缓存、内部计划和 dist/，并检查常见个人路径及密钥形态；仍需人工核对公开内容。
 
+Windows 发布先按[开发说明](development.md)构建原生目录，并实测其中的 EXE。随后使用：
+
+```text
+python tools/package_release.py --windows-dir path/to/windows-build/FormulaDesk
+```
+
+除网页版与源码 ZIP 外，这会生成 `formuladesk-1.4.0-win-x64.zip` 和 `FormulaDesk.exe`。打包器核对 Windows 清单的版本、SDK、架构、成员摘要及 HTML 绑定，再按固定白名单打包；运行产生的 WebView2Data 不进入发布包。EXE 与 ZIP 内主程序字节相同。单独 EXE 用于完整目录内替换，不是独立单文件应用；下载说明须引导首次使用者获取完整 Windows ZIP。
+
 ## 提交与公开发布
 
 正式仓库为 [hezhiheng1999/FormulaDesk](https://github.com/hezhiheng1999/FormulaDesk)。本地提交、远程推送、标签和 Release 按当次授权执行；文档整理或本地提交不包含公开发布授权。
 
-发布前查看与发布提交对应的 [Actions 运行结果](https://github.com/hezhiheng1999/FormulaDesk/actions)，确认全部任务通过，再上传 portable ZIP、source ZIP 与校验文件。旧提交的 CI、本地检查和浏览器测试各有范围，不能互相替代。不要修改已有版本的标签或附件来发布新内容。
+发布前查看与发布提交和标签对应的 [Actions 运行结果](https://github.com/hezhiheng1999/FormulaDesk/actions)，确认全部任务通过，再上传 Windows ZIP、EXE、portable ZIP、source ZIP、SHA256SUMS.txt 与 release-report.json。旧提交的 CI、本地检查和浏览器测试各有范围，不能互相替代。不要修改已有版本的标签或附件来发布新内容。发布后回读 Release 元数据，下载附件并逐项核对 SHA-256。
 
 项目采用 MIT，版权署名为 FormulaDesk contributors；MathLive 与字体保留原许可证和声明。后续发布直接使用本独立仓库，不在旧工作区维护发布副本。
 
