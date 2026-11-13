@@ -14,6 +14,8 @@
 
 试用版另以 WebView2 的 125%、150% 渲染比例复验。此次没有切换系统 DPI 或实测异 DPI 跨屏。较高公式实际撑开时，网页先增高，原生窗口随后调整，此时仍可能短暂显示滚动条。
 
+发布提交 `b4fec4e` 在主分支和标签各通过六个 CI 任务，标签任务另执行了发布打包检查。Windows ZIP 含 12 个文件，网页便携 ZIP 含 5 个，源码 ZIP 含 80 个；源码包核对至版本标签，解压后可离线重建相同的 HTML 并编译 Windows 版。公开的六个附件回读后字节数和 SHA-256 全部匹配，Windows 包部署后通过桌面快捷方式启动了 1.5.1.0 EXE。[主分支 CI](https://github.com/hezhiheng1999/FormulaDesk/actions/runs/43446486258) · [标签 CI](https://github.com/hezhiheng1999/FormulaDesk/actions/runs/43446485780) · [Release](https://github.com/hezhiheng1999/FormulaDesk/releases/tag/v1.5.1)
+
 ## v1.5.0 / FD-003
 
 [发布提交](https://github.com/hezhiheng1999/FormulaDesk/commit/2870b17d34e01dea8f21b399c95ad94ee2973293)的[主分支](https://github.com/hezhiheng1999/FormulaDesk/actions/runs/43435714591)和[标签 CI](https://github.com/hezhiheng1999/FormulaDesk/actions/runs/43435714315)各通过六个任务。发布后从公开链接下载全部六个附件，逐项核对文件长度、SHA-256 及原始字节。Windows 完整包解压后通过桌面快捷方式启动，独立 EXE 与包内主程序相同。
