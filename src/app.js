@@ -335,6 +335,11 @@
       }
       keyboard.addEventListener("virtual-keyboard-toggle", syncKeyboard);
       keyboard.addEventListener("geometrychange", syncKeyboard);
+      keyboard.addEventListener("math-virtual-keyboard-command", () => {
+        // MathLive 0.111.1 disconnects on blur and reconnects after deferred
+        // focus. Bind this field before the keyboard delivers the command.
+        if (previewEditable && keyboard.visible) mf._mathfield.connectToVirtualKeyboard();
+      });
       mf.addEventListener("input", fromVisual);
       mf.addEventListener("undo-state-change", refreshControls);
       mf.addEventListener("keydown", (event) => {

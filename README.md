@@ -19,9 +19,9 @@
 
 ## 获取与打开
 
-**Windows 浮窗：** 从[发布页](https://github.com/hezhiheng1999/FormulaDesk/releases/latest)下载 `formuladesk-1.5.0-win-x64.zip`，完整解压到可写文件夹，双击 `FormulaDesk.exe`。需要 Windows 10/11 x64、.NET Framework 4.8 系列及系统 WebView2 Runtime；本机实测 Windows 11。浮窗默认置顶，点击图钉可关闭；复制后点击目标应用输入框粘贴。Release 单独附带的 EXE 是主程序，需要 ZIP 中的同目录资源和组件，不能单独运行。
+**Windows 浮窗：** 从[发布页](https://github.com/hezhiheng1999/FormulaDesk/releases/latest)下载 `formuladesk-1.5.1-win-x64.zip`，完整解压到可写文件夹，双击 `FormulaDesk.exe`。需要 Windows 10/11 x64、.NET Framework 4.8 系列及系统 WebView2 Runtime；本机实测 Windows 11。浮窗默认置顶，点击图钉可关闭；复制后点击目标应用输入框粘贴。Release 单独附带的 EXE 是主程序，需要 ZIP 中的同目录资源和组件，不能单独运行。
 
-**独立网页：** 下载 `formuladesk-1.5.0-portable.zip`，完整解压，双击 `index.html`。Windows 也可双击 `open-formuladesk.cmd`。不要直接运行压缩包内的文件。
+**独立网页：** 下载 `formuladesk-1.5.1-portable.zip`，完整解压，双击 `index.html`。Windows 也可双击 `open-formuladesk.cmd`。不要直接运行压缩包内的文件。
 
 如果拿到的是已制作好的 source ZIP，其中也带有成品 HTML，可以直接打开。通过 Git 克隆源码则先按下面步骤构建；仓库不保存自动生成的 HTML。
 

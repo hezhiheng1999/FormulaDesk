@@ -9,7 +9,8 @@ FormulaDesk 是可离线使用的可视化 LaTeX 公式输入台。用户希望�
 ## 发布基线与证据
 
 - 仓库：[hezhiheng1999/FormulaDesk](https://github.com/hezhiheng1999/FormulaDesk)，默认分支 main。
-- 当前版本 [v1.5.0](https://github.com/hezhiheng1999/FormulaDesk/releases/tag/v1.5.0) 完成 FD-003 的 DPI 适配、单实例快捷唤出、手动工作单和四页键盘等高。验证范围见[测试说明](testing.md)。
+- 当前版本 [v1.5.1](https://github.com/hezhiheng1999/FormulaDesk/releases/tag/v1.5.1) 修复 FD-004 的数学键盘首键、切换附加面板后输入以及清空时的浮窗抖动。[测试说明](testing.md)
+- [v1.5.0](https://github.com/hezhiheng1999/FormulaDesk/releases/tag/v1.5.0) 完成 FD-003 的 DPI 适配、单实例快捷唤出、手动工作单和四页键盘等高。
 - [v1.4.0](https://github.com/hezhiheng1999/FormulaDesk/releases/tag/v1.4.0) 随 FD-002 首次提供 Windows 浮窗、置顶开关和完整便携包。
 - [v1.3.0](https://github.com/hezhiheng1999/FormulaDesk/releases/tag/v1.3.0)，包含 FD-001 的界面优化、公式库与键盘修复。
 - 首个历史版本：[v1.2.0](https://github.com/hezhiheng1999/FormulaDesk/releases/tag/v1.2.0)，起始提交为 32f2e47d2558efd5b99a781ac36b02f5bed30f68。

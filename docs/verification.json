@@ -1,72 +1,59 @@
 {
   "recorded_on": "2026-11-13",
   "project": "FormulaDesk",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "mathlive_version": "0.111.1",
-  "scope": "FD-003. Release-build checks are distinguished from the user-accepted keyboard trial and the earlier native integration tests.",
+  "scope": "FD-004. Release-binary and portable-browser checks, followed separately by the user-accepted trial results.",
   "bundle": {
     "file": "index.html",
-    "sha256": "52c7fe69a346046642ba68e880c684c279731754c3b6fcfa6f9bafb187a378cd",
-    "bytes": 1275881
+    "sha256": "033594f2901decfbe7552dc8fb980746a55466587fca11d1bf074a9ae3e775ff",
+    "bytes": 1276304
   },
   "environment": {
-    "os": "Windows 11 x64 build 26300.9974",
-    "monitor_count": 1,
-    "monitor_px": [
-      2560,
-      1440
-    ],
-    "release_scale_percent": 100,
-    "python": "3.12.14",
-    "node": "v24.18.0",
+    "os": "Windows 11 x64 26H2 build 26300.9974",
+    "release_system_scale_percent": 100,
     "webview2_and_edge": "157.0.4341.46",
     "webview2_sdk": "1.0.4314.35",
-    "exe_file_version": "1.5.0.0",
-    "exe_sha256": "372961f15a45e9ae832036a3e19e213892397e81f881ec31a336e142200c1cd8"
+    "python": "3.12.4",
+    "node": "v24.18.0",
+    "exe_file_version": "1.5.1.0",
+    "exe_sha256": "3792a8aa3b70efe5354be63b066f4775b75c1c6adc81b844b5c795a6ad148258"
   },
   "automated": {
     "node_passed": 36,
     "python_passed": 27,
     "skipped_local": 0,
     "embedded_fonts": 20,
-    "external_html_assets": 0,
-    "sdk_and_web_dependencies": "fixed local copies"
+    "external_html_assets": 0
   },
   "release_build": {
-    "native": "Versioned EXE, original and edited worksheet revisions, CR/CRLF, rejection of stale open/save messages, group restore, keyboard and panel height round trip.",
-    "native_and_browser": "Editor startup, four example domains and pagination, clear and type, fraction and Tab, 31 Greek names, long-press selection and cancellation, preservation of raw and over-limit input, restore and manual copy fallback. Browser tests opened the HTML extracted from the portable ZIP via file://.",
-    "keyboard": "Native 560-pixel window: four tabs, each 227 CSS pixels high. The five alphabetic rows, Shift and Backspace received clicks. Standalone Edge viewports 400, 560 and 1100: even tab heights, visible alphabetic key labels and five full rows.",
-    "release_archives": {
-      "windows_members": 12,
-      "browser_members": 5,
-      "source_members": 80,
-      "checks": "Member bytes, CRC, allowlists, notices, HTML and standalone EXE binding. Extracted source rebuilds the same HTML offline and compiles Windows against the pinned SDK."
-    }
+    "native": "Original 1.5.1.0 EXE on WebView2. First direct key and clear to each panel to key passed. Two rapid clicks produced two symbols. Ordinary input and clear retained a constant field and viewport height. Nested fractions grew and cleared back to one line.",
+    "native_window_width_px": [
+      400,
+      560
+    ],
+    "keyboard_page_panel_pairs_per_width": 12,
+    "keyboard_page_height_css_px": 227,
+    "greek_names": 31,
+    "editor_at_560": "Source and note retain editing focus, explicit symbol targets the formula, long-press select and cancel, fraction Tab and Tab exit, long formula horizontal scroll, invalid raw LaTeX preservation and help panel scroll.",
+    "portable_browser": "Standalone headless Edge opened the HTML extracted from the browser portable ZIP via file URL. Note editing survived a keyboard layout change. Quick symbol presses and Greek input after clearing and selecting a domain passed."
   },
-  "user_accepted_trial": {
-    "html_sha256": "96e211183eceb2c94a7cf23959e791c70cdf198b369acc751946493d24113d36",
-    "verified_release_html_delta": "Only the displayed version changes from 1.4.0 to 1.5.0.",
-    "native_keyboard": "400 and 560 pixel wide windows at 100% scale. Five full alphabetic rows and four 227 CSS-pixel tabs, no change in native height on switching. User accepted the trial."
-  },
-  "earlier_fd003_native_integration": {
-    "html_sha256": "2e3e4d01387da4f93655d0b012e3d4950d9ae2e81572b1c4e02b87fa1cbb6c1f",
-    "scale_percent": [
-      100,
+  "accepted_trial": {
+    "html_sha256": "7f8f6aacfc695aea80b06a8954ee04acf4969932ba1290dc227dfea2b953e0c5",
+    "verified_release_html_delta": "Only the displayed footer version changes from 1.5.0 to 1.5.1.",
+    "user_feedback": "User confirmed first keyboard input, input after clearing and selecting a panel, and stable clearing.",
+    "native_mouse": "The same Windows mouse click activated the original and trial windows. Only the trial received the first symbol. The trial also received a symbol after clear and panel navigation.",
+    "native_geometry": "At 100% system scale, simultaneous WebView frame and Win32 window measurements at contiguous ordinary edit and clear showed constant window heights of 517 px at width 400 and 483 px at width 560. Clearing a nested fraction contracted once from 548 to 517 and 514 to 483 px respectively.",
+    "additional_webview_render_scale_percent": [
       125,
       150
     ],
-    "restored_scale_percent": 100,
-    "window": "Min/max/restore, pin, panel positions and work-area bounds at three real system scales. A minimum 400 logical px corresponded to 400 / 500 / 600 device px.",
-    "instance_and_hotkey": "Simultaneous launch, reactivation, hidden and minimized restore, foreground toggle, hotkey conflict between distinct portable directories.",
-    "worksheet": "Native file pickers, cancelled operations, invalid files, denied/confirmed overwrite and replacement, snapshot saved during concurrent editing, recovery and reopening after restart.",
-    "clipboard": "Both copy modes pasted verbatim into an independent Windows textbox. No clipboard data stored."
+    "integration": "Both copy modes pasted exactly into an independent WinForms textbox. A worksheet was saved and reopened via native file dialogs. The global hotkey hid and showed the same window, and a repeat launch restored the window with its contents."
   },
-  "not_verified": [
-    "Windows 10 and physical mixed-DPI multi-monitor movement or restore",
-    "Physical IME candidate UI (composition events tested)",
-    "Standalone Edge OS clipboard round trip, macOS/Linux/mobile browser interaction",
-    "Mathematical correctness or target application rendering"
+  "limits": [
+    "During actual growth of a tall formula, the page can briefly show a scrollbar while the native host grows.",
+    "The 125% and 150% checks changed WebView2 rendering scale only. Windows 10, system DPI changes and mixed-DPI monitor moves were not retested for FD-004."
   ],
-  "release_url": "https://github.com/hezhiheng1999/FormulaDesk/releases/tag/v1.5.0",
+  "release_url": "https://github.com/hezhiheng1999/FormulaDesk/releases/tag/v1.5.1",
   "remote_ci_url": "https://github.com/hezhiheng1999/FormulaDesk/actions"
 }
