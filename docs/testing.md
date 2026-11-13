@@ -4,6 +4,8 @@
 
 ## v1.5.0 / FD-003
 
+[发布提交](https://github.com/hezhiheng1999/FormulaDesk/commit/2870b17d34e01dea8f21b399c95ad94ee2973293)的[主分支](https://github.com/hezhiheng1999/FormulaDesk/actions/runs/43435714591)和[标签 CI](https://github.com/hezhiheng1999/FormulaDesk/actions/runs/43435714315)各通过六个任务。发布后从公开链接下载全部六个附件，逐项核对文件长度、SHA-256 及原始字节。Windows 完整包解压后通过桌面快捷方式启动，独立 EXE 与包内主程序相同。
+
 正式版 HTML 为 1275881 字节，SHA-256 为 `52c7fe69a346046642ba68e880c684c279731754c3b6fcfa6f9bafb187a378cd`。与用户确认的最后试制版逐字节比较，唯一差异是页脚版本号。1.5.0.0 EXE 和从网页便携 ZIP 解压的本地 HTML 都重新运行了编辑回归。原生浮窗另外复验了五排按键的命中、键盘与面板高度还原、工作单换行保留及过期保存回执。Node 36/36、Python 27/27 均通过。
 
 按试用反馈，将罗马字母页的五排按键排入其余三页的高度。Windows 11、100% 缩放下，在 400 和 560 像素宽的原生浮窗中往返切换，四页键盘均高 227 个 CSS 像素，浮窗高度保持稳定。逐排点击并核对字母、数字、Shift、退格和末排加号的输入结果。独立 Edge 的 400、560 和 1100 像素视口也已核对。用户确认的试制 HTML 为 1275881 字节，SHA-256 为 `96e211183eceb2c94a7cf23959e791c70cdf198b369acc751946493d24113d36`。
