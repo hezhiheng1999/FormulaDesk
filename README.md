@@ -19,9 +19,9 @@
 
 ## 获取与打开
 
-**Windows 浮窗：** 从[发布页](https://github.com/hezhiheng1999/FormulaDesk/releases/latest)下载 `formuladesk-1.4.0-win-x64.zip`，完整解压到可写文件夹，双击 `FormulaDesk.exe`。需要 Windows 10/11 x64、.NET Framework 4.8 系列及系统 WebView2 Runtime；本机实测 Windows 11。浮窗默认置顶，点击图钉可关闭；复制后点击目标应用输入框粘贴。Release 单独附带的 EXE 是主程序，需要 ZIP 中的同目录资源和组件，不能单独运行。
+**Windows 浮窗：** 从[发布页](https://github.com/hezhiheng1999/FormulaDesk/releases/latest)下载 `formuladesk-1.5.0-win-x64.zip`，完整解压到可写文件夹，双击 `FormulaDesk.exe`。需要 Windows 10/11 x64、.NET Framework 4.8 系列及系统 WebView2 Runtime；本机实测 Windows 11。浮窗默认置顶，点击图钉可关闭；复制后点击目标应用输入框粘贴。Release 单独附带的 EXE 是主程序，需要 ZIP 中的同目录资源和组件，不能单独运行。
 
-**独立网页：** 下载 `formuladesk-1.4.0-portable.zip`，完整解压，双击 `index.html`。Windows 也可双击 `open-formuladesk.cmd`。不要直接运行压缩包内的文件。
+**独立网页：** 下载 `formuladesk-1.5.0-portable.zip`，完整解压，双击 `index.html`。Windows 也可双击 `open-formuladesk.cmd`。不要直接运行压缩包内的文件。
 
 如果拿到的是已制作好的 source ZIP，其中也带有成品 HTML，可以直接打开。通过 Git 克隆源码则先按下面步骤构建；仓库不保存自动生成的 HTML。
 
@@ -47,6 +47,12 @@ python build.py
 
 清空或载入示例会替换当前公式与说明，可通过“恢复上次内容”找回最近一次替换前的完整内容。公式内的撤销/重做用于可视化公式编辑，不是永久历史记录。
 
+### Windows 浮窗与工作单
+
+- 按 `Ctrl+Alt+F` 唤出浮窗。在浮窗内再按一次会隐藏，公式、说明、面板和图钉状态随窗口保留。关闭按钮退出程序。
+- 同一用户、同一登录会话中，再次启动同目录的 EXE 会显示已有窗口。其他便携目录可独立运行，热键已被占用时会提示原因。
+- 展开“LaTeX源码和补充说明”，用“保存工作单…”（`Ctrl+S`）选择文件，用“打开工作单…”（`Ctrl+O`）载入。工作单保存一组 LaTeX 与说明，包括未完成的源码。打开后可恢复上一组内容。[快速使用](docs/QUICKSTART.md)
+
 ## 鲁棒性与数据保护
 
 - 公式和说明各限 10000 个 JavaScript 字符单位（UTF-16 代码单元），显式括号分组和连续控制指令各限 64。超限保留原文，并暂停相应操作，不截断输入。
@@ -57,7 +63,7 @@ python build.py
 - 未复制内容离开页面时尝试触发浏览器提醒；提醒受浏览器限制，不是备份。
 - 编辑区内可直接复制；示例按领域切换，每页 6 个。下方的 LaTeX 源码与补充说明默认收起，宽窗口展开后并列，窄窗口上下排列。
 
-工具**不保存草稿**。关闭或刷新前请复制需要保留的内容。它也不校验数学推导、物理单位或模型答案是否正确。
+关闭或刷新前请复制需要保留的内容，Windows 浮窗也可手动保存工作单。工具不自动保存草稿，也不校验数学推导、物理单位或模型答案是否正确。
 
 ## 离线与隐私
 

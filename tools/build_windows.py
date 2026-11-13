@@ -64,7 +64,9 @@ def build_windows(sdk_package, output):
             "需要 Windows 10/11 x64、.NET Framework 4.8 系列和系统 WebView2 Runtime。\n"
             "标题栏图钉位于最小化按钮左侧，蓝色直立表示置顶开启，灰色倾斜表示关闭。\n"
             "点击下方标签展开内容，再点同一标签收起。复制后点回目标输入框粘贴。\n"
-            "输入只在本次窗口中保留，关闭前请复制。运行时缓存位于 WebView2Data 文件夹。\n"
+            "Ctrl+Alt+F 唤出或隐藏浮窗。再次启动同目录的 EXE 会显示已有窗口。\n"
+            "在源码和说明面板用 Ctrl+S 保存工作单，Ctrl+O 打开。文件由你选择，关闭前可复制或保存。\n"
+            "运行时缓存位于 WebView2Data 文件夹。\n"
             "备用网页入口为 app/index.html。退出程序后可删除整个解压目录。\n",
             encoding="utf-8")
         shutil.copyfile(ROOT / "src/windows/app.config", stage / "FormulaDesk.exe.config")
@@ -75,6 +77,7 @@ def build_windows(sdk_package, output):
         subprocess.run([str(icon_tool), str(icon_file)], check=True)
         metadata = Path(temporary) / "AssemblyInfo.cs"
         metadata.write_text('using System.Reflection;\n'
+            '[assembly: System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.8")]\n'
             '[assembly: AssemblyTitle("FormulaDesk")]\n'
             '[assembly: AssemblyProduct("FormulaDesk")]\n'
             '[assembly: AssemblyVersion("' + version + '.0")]\n'
@@ -87,7 +90,9 @@ def build_windows(sdk_package, output):
                    "/r:System.Web.Extensions.dll"]
         command += ["/r:" + str(stage / name) for name in
                     ("Microsoft.Web.WebView2.Core.dll", "Microsoft.Web.WebView2.WinForms.dll")]
-        command += [str(ROOT / "src/windows" / name) for name in ("Program.cs", "WindowHeight.cs", "PinToggle.cs")]
+        command += [str(ROOT / "src/windows" / name) for name in
+                    ("Program.cs", "WindowHeight.cs", "WindowMetrics.cs", "PinToggle.cs", "SingleInstance.cs",
+                     "WorksheetStore.cs")]
         command.append(str(metadata))
         subprocess.run(command, check=True)
         receipt = {"version": version, "sdk": SDK_VERSION, "architecture": "x64", "files": {}}

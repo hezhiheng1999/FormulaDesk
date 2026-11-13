@@ -1,6 +1,6 @@
 # 制作与发布
 
-本次版本为 v1.4.0，既有 v1.2.0、v1.3.0 的原始 ZIP 继续保留。发布脚本会替换同版本的文件，并更新汇总校验清单和报告；制作新版前先将旧版汇总文件归档至本机历史目录。日常开发、迁移或文档整理不运行打包。
+本次版本为 v1.5.0。历史版本的原始 ZIP 按版本号保留。发布脚本会替换同版本的文件，并更新汇总校验清单和报告；制作新版前先将旧版同名 EXE、校验清单和报告归档至本机历史目录。日常开发、迁移或文档整理不运行打包。
 
 ## 制作新版本
 
@@ -16,7 +16,7 @@ Windows 发布先按[开发说明](development.md)构建原生目录，并实测
 python tools/package_release.py --windows-dir path/to/windows-build/FormulaDesk
 ```
 
-除网页版与源码 ZIP 外，这会生成 `formuladesk-1.4.0-win-x64.zip` 和 `FormulaDesk.exe`。打包器核对 Windows 清单的版本、SDK、架构、成员摘要及 HTML 绑定，再按固定白名单打包；运行产生的 WebView2Data 不进入发布包。EXE 与 ZIP 内主程序字节相同。单独 EXE 用于完整目录内替换，不是独立单文件应用；下载说明须引导首次使用者获取完整 Windows ZIP。
+除网页版与源码 ZIP 外，这会生成 `formuladesk-1.5.0-win-x64.zip` 和 `FormulaDesk.exe`。打包器核对 Windows 清单的版本、SDK、架构、成员摘要及 HTML 绑定，再按固定白名单打包；运行产生的 WebView2Data 不进入发布包。EXE 与 ZIP 内主程序字节相同。单独 EXE 用于完整目录内替换，不是独立单文件应用；下载说明须引导首次使用者获取完整 Windows ZIP。
 
 ## 提交与公开发布
 

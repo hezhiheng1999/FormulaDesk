@@ -34,6 +34,9 @@
   let manualRevision = -1;
   let manualIncludesNote = false;
   let sourceWarning = "";
+  // A textarea exposes LF line endings. Keep imported CR/CRLF until that field is edited.
+  let rawLatex = null;
+  let rawNote = null;
 
   function message(text, type = "") {
     status.textContent = text;
@@ -86,25 +89,35 @@
     renderExamples();
   }
 
-  function snapshot() { return { latex: source.value, note: note.value }; }
+  function snapshot() { return { latex: rawLatex ?? source.value, note: rawNote ?? note.value }; }
+
+  function setContents(value) {
+    source.value = value.latex;
+    note.value = value.note;
+    rawLatex = source.value === value.latex ? null : value.latex;
+    rawNote = note.value === value.note ? null : value.note;
+  }
 
   function refreshControls() {
-    const allowed = core.canCopy(source.value, note.value) && !copyPending;
+    const { latex, note: description } = snapshot();
+    const copyable = core.canCopy(latex, description);
+    const allowed = copyable && !copyPending;
     promptButton.disabled = !allowed;
     latexButton.disabled = !allowed;
-    manualButton.disabled = !core.canCopy(source.value, note.value);
+    manualButton.disabled = !copyable;
     clearButton.disabled = source.value === "" && note.value === "";
     restoreButton.disabled = previous === null;
     undoButton.disabled = !previewEditable || !mf || !mf.canUndo();
     redoButton.disabled = !previewEditable || !mf || !mf.canRedo();
     insertButtons.forEach((button) => { button.disabled = !previewEditable; });
     keyboardToggle.disabled = !previewEditable || !keyboard;
-    byId("source-count").textContent = source.value.length + " / " + core.MAX_SOURCE_LENGTH;
-    byId("source-count").classList.toggle("over-limit", source.value.length > core.MAX_SOURCE_LENGTH);
+    byId("source-count").textContent = latex.length + " / " + core.MAX_SOURCE_LENGTH;
+    byId("source-count").classList.toggle("over-limit", latex.length > core.MAX_SOURCE_LENGTH);
   }
 
   function changed() {
     revision += 1;
+    if (desktop) desktop.worksheetStatus("");
     safeToLeave = source.value === "" && note.value === "";
     manualCopy.hidden = true;
     refreshControls();
@@ -125,9 +138,10 @@
   }
 
   function renderSource() {
-    const analysis = core.analyzeSource(source.value);
+    const { latex, note: description } = snapshot();
+    const analysis = core.analyzeSource(latex);
     let warning = analysis.message;
-    if (note.value.length > core.MAX_NOTE_LENGTH) {
+    if (description.length > core.MAX_NOTE_LENGTH) {
       warning += (warning ? " " : "") + "说明超过 10000 字符，请缩短后再复制。";
     }
     if (!analysis.preview) {
@@ -152,7 +166,7 @@
       } catch (error) {
         hidePreview("无法排版这段源码，原文仍然保留。");
         warning = "排版失败（" + error.name + "）。请修改源码；也可以复制原文。";
-        console.error("FormulaDesk renderer failed:", error.name, error.message);
+        console.error("FormulaDesk renderer failed:", error.name);
       }
     }
     sourceWarning = warning;
@@ -161,6 +175,7 @@
   }
 
   function editedSource() {
+    rawLatex = null;
     const normalized = core.normalizeSource(source.value);
     if (normalized !== source.value) source.value = normalized;
     changed();
@@ -168,16 +183,17 @@
     message("源码已保留。请检查预览和提示后再复制。");
   }
 
-  function replaceContents(value, reason) {
-    if (source.value !== "" || note.value !== "") previous = snapshot();
-    source.value = value.latex;
-    note.value = value.note;
+  function replaceContents(value, reason, saved = false) {
+    if (saved || source.value !== "" || note.value !== "") previous = snapshot();
+    setContents(value);
     changed();
+    if (saved) safeToLeave = true;
     renderSource();
     message(reason + (previous ? " 可点“恢复上次内容”撤销这次替换。" : ""));
   }
 
   function fromVisual() {
+    rawLatex = null;
     source.value = mf.getValue("latex-expanded");
     changed();
     const analysis = core.analyzeSource(source.value);
@@ -199,17 +215,18 @@
   }
 
   function payload(includeNote) {
-    return core.buildPayload(source.value, note.value, includeNote);
+    const { latex, note: description } = snapshot();
+    return core.buildPayload(latex, description, includeNote);
   }
 
   function manual() {
-    if (!core.canCopy(source.value, note.value)) return;
+    if (manualButton.disabled) return;
     selectManual(payload(true), revision, true);
     message("内容已选中，请按 Ctrl+C，随后在目标输入框粘贴检查。");
   }
 
   async function copy(includeNote) {
-    if (copyPending || !core.canCopy(source.value, note.value)) return;
+    if (copyPending || promptButton.disabled) return;
     const text = payload(includeNote);
     const capturedRevision = revision;
     const coversCurrentWork = includeNote || note.value.trim() === "";
@@ -222,7 +239,7 @@
       }
       await navigator.clipboard.writeText(text);
       if (capturedRevision === revision) {
-        safeToLeave = coversCurrentWork;
+        safeToLeave ||= coversCurrentWork;
         message("已完成复制请求，请粘贴检查。若未粘贴出内容，请使用“手动复制”。", "success");
       } else {
         message("已复制点击时的内容；当前输入已更改，请按需要重新复制。");
@@ -313,8 +330,7 @@
         keyboardToggle.setAttribute("aria-expanded", String(keyboard.visible));
         keyboardLabel.textContent = keyboard.visible ? "收起数学键盘" : "展开数学键盘";
         keyboardToggle.title = keyboardLabel.textContent;
-        // Alphabetic has five rows; other layouts can have four. MathLive
-        // bottom-aligns the plate, so a fixed-height host clips its top rows.
+        // MathLive bottom-aligns the plate. Measure it after layout to include the toolbar and gaps.
         keyboardContainer.style.height = keyboard.visible ? Math.ceil(keyboard.boundingRect.height) + 1 + "px" : "0px";
       }
       keyboard.addEventListener("virtual-keyboard-toggle", syncKeyboard);
@@ -354,7 +370,7 @@
         }
         if (!analysis.preview || !analysis.valid || unsupported || source.value.length + normalized.length > core.MAX_SOURCE_LENGTH) {
           event.preventDefault();
-          replaceContents({ latex: normalized, note: note.value }, "粘贴内容已完整保留到源码区。");
+          replaceContents({ latex: normalized, note: snapshot().note }, "粘贴内容已完整保留到源码区。");
           if (desktop) desktop.select("source");
           outputPanel.open = true;
           byId("source-panel").open = true;
@@ -380,6 +396,7 @@
   });
   source.addEventListener("input", editedSource);
   note.addEventListener("input", () => {
+    rawNote = null;
     changed();
     syntaxStatus.textContent = sourceWarning + (note.value.length > core.MAX_NOTE_LENGTH ? " 说明超过 10000 字符，请缩短后再复制。" : "");
     message("说明已更改，请重新复制所需内容。");
@@ -435,14 +452,17 @@
     // Release the disabled button before MathLive starts its deferred focus;
     // a later browser blur would otherwise cancel that focus request.
     clearButton.blur();
-    if (previewEditable && mf) mf.focus();
+    if (previewEditable && mf) {
+      // After panel navigation MathLive can still report focus while the DOM focus is on a button.
+      HTMLElement.prototype.focus.call(mf);
+      mf.focus();
+    }
   });
   restoreButton.addEventListener("click", () => {
     if (!previous) return;
     const value = previous;
     previous = null;
-    source.value = value.latex;
-    note.value = value.note;
+    setContents(value);
     changed();
     renderSource();
     message("已恢复替换前的公式和说明。");
@@ -466,6 +486,28 @@
       event.returnValue = "";
     }
   });
+
+  if (desktop) {
+    window.FormulaDeskWorkspace = Object.freeze({ getSnapshot: () => ({ ...snapshot(), revision }) });
+    window.chrome.webview.addEventListener("message", ({ data }) => {
+      if (!data || !Number.isSafeInteger(data.revision) || data.revision < 0) return;
+      let result;
+      if (data.type === "worksheet-saved") {
+        if (data.revision === revision) {
+          safeToLeave = true;
+          result = "工作单已保存。";
+        } else result = "已保存选择文件时的内容。当前修改请再次保存。";
+      } else if (data.type === "worksheet-opened" && typeof data.latex === "string" && typeof data.note === "string") {
+        if (data.revision !== revision) result = "打开期间输入已更改。请重新打开工作单。";
+        else {
+          result = "已打开工作单。可点“恢复上次内容”找回替换前的公式和说明。";
+          replaceContents(data, "", true);
+        }
+      } else return;
+      desktop.worksheetStatus(result);
+      message(result);
+    });
+  }
 
   source.disabled = false;
   renderSource();

@@ -36,7 +36,11 @@ namespace FormulaDesk
                 e.Graphics.DrawLine(pen, 0, 3, 0, 9);
             }
             e.Graphics.ResetTransform();
-            if (Focused) ControlPaint.DrawFocusRectangle(e.Graphics, new Rectangle(3, 3, Width - 6, Height - 6));
+            if (Focused)
+            {
+                int inset = WindowMetrics.Scale(3, DeviceDpi);
+                ControlPaint.DrawFocusRectangle(e.Graphics, Rectangle.Inflate(ClientRectangle, -inset, -inset));
+            }
         }
     }
 }

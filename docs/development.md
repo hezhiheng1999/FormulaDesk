@@ -56,3 +56,7 @@ python tools/build_windows.py --sdk-package path/to/microsoft.web.webview2.1.0.4
 ```
 
 产物包括 FormulaDesk/FormulaDesk.exe、windows-manifest.json 和版本化的 win-x64 ZIP。正式发布还需按[发布说明](releasing.md)将整个构建目录交给公开白名单打包器，绑定 EXE、SDK 与已验证 HTML，排除运行缓存。网页仍由 build.py 从 src/ 生成。发布状态见 [FD-002 任务记录](tasks.md)。
+
+Windows 浮窗使用 WinForms PerMonitorV2 配置。宿主以 96 DPI 逻辑单位保存面板收起基线，网页上报的 CSS 尺寸仅按 devicePixelRatio 转换一次。单实例使用会话内具名互斥量和自动重置信号，名称根据实际便携目录和用户 SID 的哈希生成。
+
+工作单的文件和快照接口见[实施计划](fd-003-plan.md)。宿主在 WebView2 回调退出后启动原生文件选择框。打开时验证完整文件和当前快照版本，保存时只确认捕获的版本。编译清单和公开源码白名单均包含 WindowMetrics、SingleInstance 和 WorksheetStore。

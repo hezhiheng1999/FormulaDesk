@@ -65,6 +65,13 @@ math-field::part(virtual-keyboard-toggle), math-field::part(menu-toggle) { displ
 .restore-button { color: var(--blue); }
 .restore-button:disabled { display: none; }
 .keyboard-container { position: relative; height: 0; border-top: 1px solid var(--border); --keyboard-background: #eceef2; --keyboard-toolbar-background: #e5e8ed; --keyboard-toolbar-background-hover: #d9dfe8; --keyboard-toolbar-background-selected: #f9fafc; --keyboard-toolbar-text: #646c7a; --keyboard-toolbar-text-active: var(--blue); --keyboard-accent-color: var(--blue); --keycap-background: #fff; --keycap-background-hover: #f7f9fe; --keycap-background-pressed: #dce6fa; --keycap-text: #303747; --keycap-text-hover: var(--blue); --keycap-text-pressed: #203d7a; --keycap-border: 1px solid #dfe3ea; --keycap-border-bottom: 1px solid #cdd3de; --keycap-secondary-background: #dce1e9; --keycap-secondary-background-hover: #cdd6e5; --keycap-secondary-text: #596577; --keycap-secondary-border: 1px solid #d1d7e1; --keycap-secondary-border-bottom: 1px solid #bdc6d4; --keycap-primary-background: #e1e9fb; --keycap-primary-background-hover: #ceddfa; --keycap-primary-text: var(--blue); --keycap-shift-color: #646c79; --keycap-shift-font-size: 10px; --keycap-height: 44px; --keyboard-zindex: 5; --keyboard-padding-top: 0px; --keyboard-padding-bottom: 0px; }
+/* Fit the five alphabetic rows in the height of four, including their extra gap. */
+.keyboard-container .MLK__rows:has(> .MLK__row:nth-child(5):last-child) > .MLK__row > div {
+  height: calc((4 * var(--_keycap-height) - var(--_keycap-gap)) / 5);
+}
+.keyboard-container .MLK__rows:has(> .MLK__row:nth-child(5):last-child) .big-op {
+  font-size: var(--_keycap-font-size);
+}
 .keyboard-container .MLK__keycap > .MLK__shift { top: 3px; right: 3px; min-width: 16px; padding: 1px 3px; border: 1px solid #d9dfe8; border-radius: 4px; background: #f1f3f7; color: #646c79; font-size: 10px; line-height: 1.2; text-align: center; pointer-events: none; }
 .keyboard-container .MLK__shift .ML__latex { font-size: 1em; }
 .keyboard-container .MLK__keycap:not(.hide-shift):not(.is-active):not(.is-pressed) > .MLK__shift { display: block; }
@@ -215,5 +222,9 @@ html.desktop { scrollbar-gutter: auto; }
 .desktop .examples-card { padding: 8px 0; }
 .desktop .examples-heading { display: none; }
 .desktop .output-content { padding: 12px; gap: 10px; }
+.desktop .worksheet-actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 6px 12px 10px; }
+.desktop .worksheet-actions button { padding: 5px 10px; }
+.desktop .worksheet-result { margin: 0; padding: 0 12px 8px; color: var(--muted); font-size: 12px; }
+.desktop .worksheet-result:empty { display: none; }
 .desktop .note-input, .desktop .source-input { min-height: 104px; }
 .desktop .help-content { border-top: 0; padding: 12px; }

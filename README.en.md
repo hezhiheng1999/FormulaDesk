@@ -8,9 +8,9 @@ A portable, offline visual LaTeX editor for AI conversations and documents. Writ
 
 ## Run
 
-**Windows floating window:** download `formuladesk-1.4.0-win-x64.zip` from the [latest release](https://github.com/hezhiheng1999/FormulaDesk/releases/latest), extract it completely to a writable folder, and double-click `FormulaDesk.exe`. Requires Windows 10/11 x64, .NET Framework 4.8 and an existing system WebView2 Runtime. The pin starts enabled. Copy, click the destination input and paste. The separate EXE attachment requires the files from the ZIP and cannot run alone. Runtime cache is stored in the adjacent `WebView2Data` folder; formulas are not saved.
+**Windows floating window:** download `formuladesk-1.5.0-win-x64.zip` from the [latest release](https://github.com/hezhiheng1999/FormulaDesk/releases/latest), extract it completely to a writable folder, and double-click `FormulaDesk.exe`. Requires Windows 10/11 x64, .NET Framework 4.8 and an existing system WebView2 Runtime. The pin starts enabled. Copy, click the destination input and paste. The separate EXE attachment requires the files from the ZIP and cannot run alone. Runtime cache is stored in the adjacent `WebView2Data` folder. To keep a formula and note, save a worksheet.
 
-**Browser edition:** extract `formuladesk-1.4.0-portable.zip` and open `index.html`. On Windows, `open-formuladesk.cmd` opens it with the default browser. No account, API key, package manager, or background server is required.
+**Browser edition:** extract `formuladesk-1.5.0-portable.zip` and open `index.html`. On Windows, `open-formuladesk.cmd` opens it with the default browser. No account, API key, package manager, or background server is required.
 
 A prepared source ZIP also contains the generated HTML. When cloning the source repository, run `python build.py` using Python 3.10+. Build dependencies are vendored, so the normal build is offline. Node.js 20+ is required only for tests.
 
@@ -25,7 +25,11 @@ The interface is currently in Simplified Chinese. Browser behavior outside the t
 
 If automatic copying is unavailable, select **手动复制** (manual copy), press Ctrl/Command+C, and paste. The application does not read the clipboard to verify its contents. A successful browser API response is not a guarantee of what another application will paste.
 
-The **恢复上次内容** control restores the formula and note before the most recent clear/example replacement. It is not persistent history. Unsaved inputs are not stored; copy important work before closing or refreshing.
+The **恢复上次内容** control restores the formula and note after clearing the editor, loading an example, or opening a worksheet. Copy important work before closing or refreshing, or save a worksheet in the Windows edition.
+
+## Windows shortcuts and worksheets
+
+The Windows editor adapts to the display DPI. Ctrl+Alt+F shows or hides the editor. Launching it again from the same folder activates the existing editor for the current user and login session. Ctrl+S and Ctrl+O save and open a local UTF-8 worksheet containing the original LaTeX and note. Each file operation uses a native file picker. The size limit is 1 MiB.
 
 ## Boundaries
 

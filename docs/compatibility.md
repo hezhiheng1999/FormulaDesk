@@ -12,8 +12,8 @@
 
 | 环境 | 使用方式 | 验证状态 |
 |---|---|---|
-| Windows 10/11 x64 + .NET Framework 4.8 + 系统 WebView2 | 完整解压 win-x64 ZIP 后双击 FormulaDesk.exe | Windows 11、100% 缩放、WebView2 157 已实测；其他 DPI、多屏和 Windows 10 未实测 |
-| Windows + Chromium 类浏览器 | 解压后双击 index.html | 2026-10-27 内置 Chromium 的 HTTP 预览已实测；本地文件启动尚未完成实测 |
+| Windows 10/11 x64 + .NET Framework 4.8 + 系统 WebView2 | 完整解压 win-x64 ZIP 后双击 FormulaDesk.exe | Windows 11 单屏、100% / 125% / 150% 缩放、WebView2 157 已实测。Windows 10 和异 DPI 跨屏尚待实测 |
+| Windows + Chromium 类浏览器 | 解压后双击 index.html | 独立 Edge 157 已用本地 HTML 完成编辑回归 |
 | macOS / Linux + 浏览器 | 解压后双击 index.html | 设计支持；尚无这些系统的交互实测记录 |
 | Firefox / Safari | 打开独立 HTML | 尚未完成浏览器实测；自动复制可能受限制，可用手动复制 |
 | 窄窗口 / 分屏 | 页面自动上下排列 | 历史测试尺寸与结果见[测试说明](testing.md) |
@@ -21,7 +21,9 @@
 
 不依赖 Codex、ChatGPT、Claude 等应用的专有接口。只要目标接受文本，就能粘贴；不保证目标渲染 LaTeX，也不会改变目标应用的输入框。
 
-浮窗正常状态使用 Windows 11 系统圆角，最大化时遵循系统窗口样式。Windows 10 不承诺系统圆角。浮窗在解压目录建立 WebView2Data 缓存，输入仍只在当前窗口保留；无需安装完整 WebView2 SDK。
+浮窗正常状态使用 Windows 11 系统圆角，最大化时遵循系统窗口样式。Windows 10 不承诺系统圆角。浮窗在解压目录建立 WebView2Data 缓存，无需安装完整 WebView2 SDK。
+
+窄窗下限为 400 个逻辑像素，显示器工作区更小时会相应收窄。独立网页版已在 Windows Edge 的本地文件入口完成编辑回归。Windows 10、不同缩放显示器间的拖动与还原尚待实机验证。[测试说明](testing.md)
 
 ## 输入与行为边界
 
@@ -31,4 +33,4 @@
 - 识别不了或未写完的源码保留原文并暂停预览，可继续修改或复制。
 - 链接和 HTML 扩展只作为源码保留。公式中的链接不能打开网页，工具也不朗读公式。
 - 可视化编辑导出 MathLive 的展开形式，可能统一空格、下标花括号和宏；未识别的源码不会自动转入可视编辑。
-- “恢复上次内容”仅恢复最近一次清空或示例/异常粘贴替换之前的公式和说明，不是永久历史记录。
+- “恢复上次内容”恢复最近一次整组替换前的公式和说明。Windows 浮窗打开工作单也可用这一操作恢复。工作单文件上限为 1048576 字节，预览和复制继续使用上述输入限制。

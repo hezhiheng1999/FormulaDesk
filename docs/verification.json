@@ -1,75 +1,72 @@
 {
-  "recorded_on": "2026-11-12",
+  "recorded_on": "2026-11-13",
   "project": "FormulaDesk",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "mathlive_version": "0.111.1",
-  "scope": "FD-002 user-accepted desktop UI; fresh v1.4.0 Windows build and WebView2 regression. Historical browser tests are not counted as new tests.",
-  "remote_ci_url": "https://github.com/hezhiheng1999/FormulaDesk/actions",
+  "scope": "FD-003. Release-build checks are distinguished from the user-accepted keyboard trial and the earlier native integration tests.",
   "bundle": {
     "file": "index.html",
-    "sha256": "221c646d275c858e42ac60959951c2fd4a8dc4bf04671b1a715b4131b63a21f9",
-    "bytes": 1271671
+    "sha256": "52c7fe69a346046642ba68e880c684c279731754c3b6fcfa6f9bafb187a378cd",
+    "bytes": 1275881
   },
   "environment": {
-    "os": "Windows 11 x64",
-    "build": "10.0.26300",
-    "display_scale_percent": 100,
-    "python": "3.12.4",
+    "os": "Windows 11 x64 build 26300.9974",
+    "monitor_count": 1,
+    "monitor_px": [
+      2560,
+      1440
+    ],
+    "release_scale_percent": 100,
+    "python": "3.12.14",
     "node": "v24.18.0",
-    "webview2": "157.0.4341.42",
+    "webview2_and_edge": "157.0.4341.46",
     "webview2_sdk": "1.0.4314.35",
-    "exe_version": "1.4.0.0"
+    "exe_file_version": "1.5.0.0",
+    "exe_sha256": "372961f15a45e9ae832036a3e19e213892397e81f881ec31a336e142200c1cd8"
   },
   "automated": {
-    "node_tests_passed": 36,
-    "python_tests_passed": 24,
-    "independent_bundle_check": "passed",
-    "public_sources": 76,
-    "dependencies_installed": false,
-    "network_dependency_fetch": false
+    "node_passed": 36,
+    "python_passed": 27,
+    "skipped_local": 0,
+    "embedded_fonts": 20,
+    "external_html_assets": 0,
+    "sdk_and_web_dependencies": "fixed local copies"
   },
-  "fresh_desktop_scenarios_passed": [
-    "native_v1_4_exe_startup_and_version",
-    "compact_margins_and_accessible_feedback",
-    "exclusive_panels_expand_switch_and_restore_height",
-    "formula_and_note_clear_restore",
-    "incomplete_raw_source_preserved",
-    "clipboard_refusal_selects_manual_payload",
-    "white_variant_panel_hold_drag_select_and_cancel",
-    "31_greek_names_visible_and_unclipped"
-  ],
-  "user_acceptance": {
-    "confirmed": true,
-    "scope": "Fourth FD-002 trial accepted; final UI source retained for v1.4.0"
+  "release_build": {
+    "native": "Versioned EXE, original and edited worksheet revisions, CR/CRLF, rejection of stale open/save messages, group restore, keyboard and panel height round trip.",
+    "native_and_browser": "Editor startup, four example domains and pagination, clear and type, fraction and Tab, 31 Greek names, long-press selection and cancellation, preservation of raw and over-limit input, restore and manual copy fallback. Browser tests opened the HTML extracted from the portable ZIP via file://.",
+    "keyboard": "Native 560-pixel window: four tabs, each 227 CSS pixels high. The five alphabetic rows, Shift and Backspace received clicks. Standalone Edge viewports 400, 560 and 1100: even tab heights, visible alphabetic key labels and five full rows.",
+    "release_archives": {
+      "windows_members": 12,
+      "browser_members": 5,
+      "source_members": 80,
+      "checks": "Member bytes, CRC, allowlists, notices, HTML and standalone EXE binding. Extracted source rebuilds the same HTML offline and compiles Windows against the pinned SDK."
+    }
   },
-  "prior_fd002_acceptance": [
-    "Explorer_double_click_and_f_icon",
-    "pin_two_states_and_native_window_menu",
-    "title_drag_and_edge_resize",
-    "minimize_maximize_restore_560x483",
-    "400px_margins_and_25_hints_no_overlap",
-    "560px_and_400px_31_greek_names",
-    "long_formula_horizontal_scroll",
-    "two_copy_modes_match_in_isolated_native_textbox",
-    "network_offline_local_reload"
-  ],
-  "clipboard_evidence": {
-    "fresh_release": "clipboard API rejection followed by selected manual payload",
-    "os_clipboard_roundtrip": "Verified in earlier FD-002 trials with an isolated native textbox; not rerun for the version-label-only rebuild",
-    "product_reads_clipboard": false
+  "user_accepted_trial": {
+    "html_sha256": "96e211183eceb2c94a7cf23959e791c70cdf198b369acc751946493d24113d36",
+    "verified_release_html_delta": "Only the displayed version changes from 1.4.0 to 1.5.0.",
+    "native_keyboard": "400 and 560 pixel wide windows at 100% scale. Five full alphabetic rows and four 227 CSS-pixel tabs, no change in native height on switching. User accepted the trial."
   },
-  "release_validation": {
-    "windows_manifest_version_sdk_architecture_digests_and_html_binding": "passed",
-    "archive_allowlist_crc": "passed; browser portable 5, source 76, Windows 12 members",
-    "source_zip_offline_rebuild": "passed; same HTML SHA-256",
-    "windows_zip_extracted_double_click": "passed; 560x483 native window",
-    "asset_hashes": "recorded in release-report.json; post-publication download comparison recorded in local publication receipt"
+  "earlier_fd003_native_integration": {
+    "html_sha256": "2e3e4d01387da4f93655d0b012e3d4950d9ae2e81572b1c4e02b87fa1cbb6c1f",
+    "scale_percent": [
+      100,
+      125,
+      150
+    ],
+    "restored_scale_percent": 100,
+    "window": "Min/max/restore, pin, panel positions and work-area bounds at three real system scales. A minimum 400 logical px corresponded to 400 / 500 / 600 device px.",
+    "instance_and_hotkey": "Simultaneous launch, reactivation, hidden and minimized restore, foreground toggle, hotkey conflict between distinct portable directories.",
+    "worksheet": "Native file pickers, cancelled operations, invalid files, denied/confirmed overwrite and replacement, snapshot saved during concurrent editing, recovery and reopening after restart.",
+    "clipboard": "Both copy modes pasted verbatim into an independent Windows textbox. No clipboard data stored."
   },
   "not_verified": [
-    "Other display scales, multiple monitors and Windows 10 interaction",
-    "macOS/Linux and independent browser interaction for v1.4.0",
-    "Minimized window directly maximized using system menu",
-    "Automated paste into Codex itself",
-    "Mathematical correctness or target model understanding"
-  ]
+    "Windows 10 and physical mixed-DPI multi-monitor movement or restore",
+    "Physical IME candidate UI (composition events tested)",
+    "Standalone Edge OS clipboard round trip, macOS/Linux/mobile browser interaction",
+    "Mathematical correctness or target application rendering"
+  ],
+  "release_url": "https://github.com/hezhiheng1999/FormulaDesk/releases/tag/v1.5.0",
+  "remote_ci_url": "https://github.com/hezhiheng1999/FormulaDesk/actions"
 }
