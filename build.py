@@ -170,7 +170,8 @@ def render():
         "<!-- APP_STYLES -->": "<style>\n" + text_file(ROOT / "src" / "app.css") + "\n</style>",
         "<!-- MATHLIVE_SCRIPT -->": script(assets["mathlive.min.js"].decode("utf-8")),
         "<!-- CORE_SCRIPT -->": script(text_file(ROOT / "src" / "core.js")),
-        "<!-- APP_SCRIPT -->": script(text_file(ROOT / "src" / "examples.js") + "\n" + text_file(ROOT / "src" / "desktop.js") + "\n" + text_file(ROOT / "src" / "app.js")),
+        "<!-- APP_SCRIPT -->": script("\n".join(text_file(ROOT / "src" / name) for name in
+            ("examples.js", "library.js", "library-ui.js", "matrix.js", "desktop.js", "app.js"))),
     }
     result = text_file(ROOT / "src" / "template.html")
     for marker, contents in replacements.items():

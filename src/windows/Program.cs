@@ -55,7 +55,7 @@ namespace FormulaDesk
         const int PinCommand = 0x1F10;
         const int HotKeyId = 1;
         readonly WebView2 web = new WebView2();
-        readonly JavaScriptSerializer json = new JavaScriptSerializer();
+        readonly JavaScriptSerializer json = new JavaScriptSerializer { MaxJsonLength = 32 * 1024 * 1024, RecursionLimit = 64 };
         readonly PinToggle pin = new PinToggle();
         readonly Panel caption = new Panel();
         readonly Label title = new Label();
@@ -78,6 +78,8 @@ namespace FormulaDesk
         bool shown;
         string hotKeyError;
         bool worksheetBusy;
+        bool libraryBusy;
+        bool libraryDirty;
 
         public DeskWindow()
         {
@@ -417,6 +419,9 @@ namespace FormulaDesk
                 core.Settings.AreBrowserAcceleratorKeysEnabled = false;
                 core.Settings.AreDevToolsEnabled = false;
                 core.Settings.IsStatusBarEnabled = false;
+                // WebView's built-in confirmation extends beyond a 400 px view.
+                core.Settings.AreDefaultScriptDialogsEnabled = false;
+                core.ScriptDialogOpening += ScriptDialogOpening;
                 web.ZoomFactor = 1;
                 core.SetVirtualHostNameToFolderMapping("formuladesk.example", app, CoreWebView2HostResourceAccessKind.Deny);
                 core.NavigationStarting += (sender, e) => { e.Cancel = e.Uri != Page; };
@@ -471,6 +476,13 @@ namespace FormulaDesk
             catch (ArgumentException) { return; }
             if (message == null || !message.ContainsKey("type")) return;
             string type = message["type"] as string;
+            if (type == "library-request") { QueueLibrary(message); return; }
+            if (type == "library-dirty")
+            {
+                object value;
+                if (message.TryGetValue("value", out value) && value is bool) libraryDirty = (bool)value;
+                return;
+            }
             if (type == "worksheet-open" || type == "worksheet-save")
             {
                 if (message.Count == 1) QueueWorksheet(type == "worksheet-save");
@@ -488,7 +500,7 @@ namespace FormulaDesk
             if (!Number(message, "base", out baseCss) || !Number(message, "total", out totalCss) ||
                 !Number(message, "scale", out scale) || scale < 0.5 || scale > 5 ||
                 !message.TryGetValue("panel", out panel) ||
-                (panel != null && panel as string != "examples" && panel as string != "source" && panel as string != "help"))
+                (panel != null && panel as string != "examples" && panel as string != "source" && panel as string != "help" && panel as string != "matrix"))
                 return;
             bool isExpanded = panel != null;
             if (WindowState != FormWindowState.Normal) return;
@@ -532,7 +544,7 @@ namespace FormulaDesk
 
         void QueueWorksheet(bool save)
         {
-            if (worksheetBusy || !ready) return;
+            if (worksheetBusy || libraryBusy || !ready) return;
             worksheetBusy = true;
             // File dialogs run their own message loop. Leave the WebView2 callback before opening one.
             BeginInvoke((Action)(async () => await RunWorksheet(save)));
@@ -612,11 +624,104 @@ namespace FormulaDesk
             MessageBox.Show(this, error.Message, "工作单操作失败", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
+        void ScriptDialogOpening(object sender, CoreWebView2ScriptDialogOpeningEventArgs e)
+        {
+            if (e.Uri != Page) return;
+            bool confirmation = e.Kind == CoreWebView2ScriptDialogKind.Confirm ||
+                e.Kind == CoreWebView2ScriptDialogKind.Beforeunload;
+            // FormulaDesk has no JavaScript prompt input; unexpected prompts are cancelled.
+            if (!confirmation && e.Kind != CoreWebView2ScriptDialogKind.Alert) return;
+            var deferral = e.GetDeferral();
+            // Leave the WebView callback before opening a modal native window.
+            BeginInvoke((Action)(() =>
+            {
+                try
+                {
+                    var result = MessageBox.Show(this, e.Message, "FormulaDesk",
+                        confirmation ? MessageBoxButtons.OKCancel : MessageBoxButtons.OK,
+                        confirmation ? MessageBoxIcon.Question : MessageBoxIcon.Information,
+                        confirmation ? MessageBoxDefaultButton.Button2 : MessageBoxDefaultButton.Button1);
+                    if (result == DialogResult.OK) e.Accept();
+                }
+                finally { deferral.Complete(); }
+            }));
+        }
+
+        void QueueLibrary(Dictionary<string, object> request)
+        {
+            object idValue, actionValue;
+            if (!request.TryGetValue("id", out idValue) || !(idValue is int) ||
+                !request.TryGetValue("action", out actionValue) || !(actionValue is string)) return;
+            int id = (int)idValue;
+            string action = (string)actionValue;
+            if (libraryBusy || worksheetBusy) { LibraryResult(id, false, null, "正在处理文件，请稍后再试。", false, false); return; }
+            libraryBusy = true;
+            BeginInvoke((Action)(() => RunLibrary(id, action, request)));
+        }
+
+        void LibraryResult(int id, bool ok, string text, string error, bool missing, bool cancelled)
+        {
+            if (web.CoreWebView2 == null || web.CoreWebView2.Source != Page) return;
+            web.CoreWebView2.PostWebMessageAsJson(json.Serialize(new {
+                type = "library-result", id, ok, text, error, missing, cancelled
+            }));
+        }
+
+        void RunLibrary(int id, string action, Dictionary<string, object> request)
+        {
+            const string filter = "FormulaDesk 公式库 (*.library.json)|*.library.json|JSON 文件 (*.json)|*.json";
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FormulaDesk.library.json");
+            try
+            {
+                if (action == "load" || action == "recover")
+                {
+                    if (action == "recover") path += ".bak";
+                    if (!File.Exists(path)) { LibraryResult(id, true, null, null, true, false); return; }
+                    LibraryResult(id, true, LibraryStore.Read(path), null, false, false);
+                }
+                else if (action == "save" || action == "export")
+                {
+                    object textValue, replaceValue;
+                    if (!request.TryGetValue("text", out textValue) || !(textValue is string))
+                        throw new InvalidDataException("缺少公式库内容。");
+                    bool replaceDamaged = request.TryGetValue("replaceDamaged", out replaceValue) && Equals(replaceValue, true);
+                    if (action == "export")
+                    {
+                        using (var dialog = new SaveFileDialog { Title = "导出公式库备份", Filter = filter,
+                            DefaultExt = "library.json", FileName = "公式库.library.json", RestoreDirectory = true,
+                            SupportMultiDottedExtensions = true, OverwritePrompt = true })
+                        {
+                            if (dialog.ShowDialog(this) != DialogResult.OK) { LibraryResult(id, true, null, null, false, true); return; }
+                            LibraryStore.WriteAtomic(dialog.FileName, (string)textValue, false, false);
+                        }
+                    }
+                    else LibraryStore.WriteAtomic(path, (string)textValue, replaceDamaged);
+                    LibraryResult(id, true, null, null, false, false);
+                }
+                else if (action == "import")
+                {
+                    using (var dialog = new OpenFileDialog { Title = "选择要导入的公式库", Filter = filter,
+                        CheckFileExists = true, RestoreDirectory = true })
+                    {
+                        if (dialog.ShowDialog(this) != DialogResult.OK) { LibraryResult(id, true, null, null, false, true); return; }
+                        LibraryResult(id, true, LibraryStore.Read(dialog.FileName), null, false, false);
+                    }
+                }
+                else throw new InvalidDataException("未知的公式库操作。");
+            }
+            catch (InvalidDataException e) { LibraryResult(id, false, null, e.Message, false, false); }
+            catch (IOException e) { LibraryResult(id, false, null, "公式库文件读写失败：" + e.Message, false, false); }
+            catch (UnauthorizedAccessException e) { LibraryResult(id, false, null, "无法访问公式库文件：" + e.Message, false, false); }
+            catch (InvalidOperationException e) { LibraryResult(id, false, null, e.Message, false, false); }
+            catch (COMException e) { LibraryResult(id, false, null, "文件选择操作失败：" + e.Message, false, false); }
+            finally { libraryBusy = false; }
+        }
+
         void ConfirmClose(object sender, FormClosingEventArgs e)
         {
-            if (worksheetBusy) { e.Cancel = true; return; }
-            if (dirty &&
-                MessageBox.Show(this, "当前内容尚未完整复制或保存为工作单，确定关闭？", "FormulaDesk",
+            if (worksheetBusy || libraryBusy) { e.Cancel = true; return; }
+            if ((dirty || libraryDirty) &&
+                MessageBox.Show(this, libraryDirty ? "公式库还有未保存的修改，确定关闭？" : "当前内容尚未完整复制或保存为工作单，确定关闭？", "FormulaDesk",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 e.Cancel = true;
         }

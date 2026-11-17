@@ -22,17 +22,19 @@ checker = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(checker)
 
 PUBLIC_FILES = {
-    "AGENTS.md", "docs/project-context.md", "docs/tasks.md", "docs/fd-003-plan.md",
+    "AGENTS.md", "docs/project-context.md", "docs/tasks.md", "docs/fd-003-plan.md", "docs/fd-005-design.md", "docs/fd-005-plan.md",
     "README.md", "README.en.md", "LICENSE", "THIRD-PARTY-NOTICES.txt", "CHANGELOG.md", "CONTRIBUTING.md", "SECURITY.md",
     ".gitignore", ".gitattributes", "package.json", "dependency-receipt.json", "build.py", "index.html", "公式输入台.html",
     "open-formuladesk.cmd", "公式输入台.cmd",
     "src/core.js", "src/app.js", "src/desktop.js", "src/examples.js", "src/template.html", "src/app.css",
+    "src/library.js", "src/library-ui.js", "src/matrix.js",
     "src/windows/Program.cs", "src/windows/WindowHeight.cs", "src/windows/app.manifest", "src/windows/app.config",
     "src/windows/CreateIcon.cs", "src/windows/PinToggle.cs", "src/windows/WindowMetrics.cs",
-    "src/windows/SingleInstance.cs", "src/windows/WorksheetStore.cs",
+    "src/windows/SingleInstance.cs", "src/windows/WorksheetStore.cs", "src/windows/LibraryStore.cs",
     "tools/build_windows.py", "tests/test_windows.py", "tests/desktop.test.js",
     "checks/check_bundle.py", "checks/preview.py",
     "tests/core.test.js", "tests/examples.test.js", "tests/test_build.py", "tests/test_release.py",
+    "tests/library.test.js", "tests/library-ui.test.js", "tests/matrix.test.js", "tests/test_library_store.py",
     "tools/package_release.py",
     "docs/QUICKSTART.md", "docs/compatibility.md", "docs/development.md", "docs/releasing.md", "docs/testing.md", "docs/verification.json", "docs/images/preview.png", "docs/images/windows.jpg",
     ".github/workflows/ci.yml", ".github/ISSUE_TEMPLATE/bug_report.md", ".github/ISSUE_TEMPLATE/feature_request.md",

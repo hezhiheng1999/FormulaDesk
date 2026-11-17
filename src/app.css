@@ -229,3 +229,57 @@ html.desktop { scrollbar-gutter: auto; }
 .desktop .worksheet-result:empty { display: none; }
 .desktop .note-input, .desktop .source-input { min-height: 104px; }
 .desktop .help-content { border-top: 0; padding: 12px; }
+
+/* Editable catalog: retain the existing editor, icons and example button styling. */
+#formula-library { min-width: 0; }
+#formula-library input, #formula-library select, #formula-library textarea { font: inherit; max-width: 100%; min-width: 0; }
+#formula-library input:not([type="checkbox"]), #formula-library select, #formula-library textarea { padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--paper); color: var(--ink); }
+#formula-library button:not(.icon-action) { border: 1px solid var(--border); border-radius: 6px; padding: 5px 9px; background: var(--paper); color: var(--ink); }
+#formula-library button:hover:not(:disabled) { background: var(--tint); }
+#formula-library input:focus-visible, #formula-library select:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+#formula-library button[aria-pressed="true"], #formula-library button[aria-selected="true"] { background: var(--tint); color: var(--blue); border-color: #cbd9fa; }
+#formula-library .library-primary { color: white; background: var(--blue); border-color: var(--blue); }
+#formula-library .library-primary:hover:not(:disabled) { background: #1c4ebc; }
+.library-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; margin-block: 8px; }
+.library-toolbar > strong, #library-search { flex: 1; }
+.library-toolbar > label { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; }
+.library-toolbar > label select { flex: 1; }
+.library-domain-row { display: flex; align-items: center; gap: 8px; }
+.library-domain-row .example-domains { flex: 1; flex-wrap: nowrap; min-width: 0; margin: 0; gap: 4px; }
+.library-domain-row .example-domains button { min-width: 0; max-width: 50%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.library-all-label { flex: 0 1 42%; min-width: 0; font-size: 11px; color: var(--muted); }
+.library-all-label select { display: block; width: 100%; }
+.library-search-scope { display: block; color: var(--muted); font-size: 12px; margin: 6px 0 10px; }
+.library-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-block: 8px; }
+.library-status, .library-hint { font-size: 12px; color: var(--muted); line-height: 1.7; margin-block: 6px; overflow-wrap: anywhere; }
+.library-status:empty { display: none; }
+.library-status.error { color: #a64b21; }
+.library-file-actions { border-top: 1px solid var(--border); padding-top: 8px; }
+.library-row { display: flex; align-items: center; gap: 8px; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--border); }
+.library-row-title { min-width: 0; overflow-wrap: anywhere; flex: 1; }
+.library-row-actions { display: flex; gap: 4px; flex: none; }
+.library-form { padding: 12px; margin-block: 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--paper); }
+.library-form label { display: block; margin-top: 9px; font-size: 12px; }
+.library-form input, .library-form textarea { display: block; width: 100%; }
+.library-form textarea { min-height: 70px; resize: vertical; }
+#library-latex { font-family: Consolas, monospace; }
+.library-preview { overflow-x: auto; padding-block: 8px; font-size: 21px; }
+.library-preview math-span, .matrix-size-preview math-span { display: inline-block; }
+.desktop #formula-library { font-size: 12px; padding-inline: 4px; }
+.desktop .library-row-actions button { padding: 5px 7px; }
+.desktop .library-toolbar { gap: 5px; }
+@media (max-width: 450px) { .library-row { flex-wrap: wrap; } .library-row-title { flex-basis: 100%; } .library-row-actions { margin-left: auto; } }
+.matrix-panel { background: var(--paper); border: 1px solid var(--border); border-radius: 9px; padding: 12px; font-size: 12px; }
+.matrix-panel button, .matrix-panel input, .matrix-panel select { font: inherit; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--paper); color: var(--ink); }
+.matrix-panel button:hover:not(:disabled) { background: var(--tint); }
+.matrix-panel input:focus-visible, .matrix-panel select:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.matrix-heading { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-block: 4px 8px; }
+.matrix-new { display: flex; flex-wrap: wrap; align-items: end; gap: 8px; }
+.matrix-new label { display: flex; flex-direction: column; gap: 3px; }
+.matrix-new input { width: 62px; }
+.matrix-size-preview { max-height: 140px; overflow: auto; padding-block: 10px; font-size: 18px; text-align: center; }
+.matrix-commands { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+#matrix-context, #matrix-status { margin-block: 8px; color: var(--muted); }
+#matrix-status:empty { display: none; }
+#matrix-confirm { margin-top: 10px; padding: 10px; border-left: 3px solid var(--blue); background: var(--tint); }
+#matrix-removal-content { overflow-wrap: anywhere; margin-block: 8px; max-height: 100px; overflow-y: auto; }

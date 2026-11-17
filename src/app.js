@@ -37,6 +37,7 @@
   // A textarea exposes LF line endings. Keep imported CR/CRLF until that field is edited.
   let rawLatex = null;
   let rawNote = null;
+  let matrixController = null;
 
   function message(text, type = "") {
     status.textContent = text;
@@ -48,45 +49,6 @@
     previewState.textContent = "页面文件不完整，无法启动。请重新获取完整的 HTML 文件。";
     message("核心脚本未加载。", "error");
     return;
-  }
-
-  const exampleGroups = window.FormulaDeskExamples;
-  const exampleDomains = byId("example-domains");
-  const exampleList = byId("example-list");
-  const examplePrev = byId("example-prev");
-  const exampleNext = byId("example-next");
-  const examplePageSize = 6;
-  let exampleGroupIndex = 0;
-  let examplePageIndex = 0;
-
-  function renderExamples() {
-    const group = exampleGroups[exampleGroupIndex];
-    const pages = Math.ceil(group.items.length / examplePageSize);
-    exampleList.replaceChildren();
-    group.items.slice(examplePageIndex * examplePageSize, (examplePageIndex + 1) * examplePageSize).forEach((example) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.textContent = example.title;
-      button.addEventListener("click", () => {
-        replaceContents(example, "已载入“" + example.title + "”。");
-        if (previewEditable && mf) mf.focus();
-      });
-      exampleList.appendChild(button);
-    });
-    byId("example-page").textContent = (examplePageIndex + 1) + " / " + pages;
-    examplePrev.disabled = examplePageIndex === 0;
-    exampleNext.disabled = examplePageIndex === pages - 1;
-    byId("example-panel").setAttribute("aria-labelledby", "example-domain-" + group.id);
-  }
-
-  function selectExampleGroup(index) {
-    exampleGroupIndex = index;
-    examplePageIndex = 0;
-    Array.from(exampleDomains.children).forEach((tab, tabIndex) => {
-      tab.setAttribute("aria-selected", String(tabIndex === index));
-      tab.tabIndex = tabIndex === index ? 0 : -1;
-    });
-    renderExamples();
   }
 
   function snapshot() { return { latex: rawLatex ?? source.value, note: rawNote ?? note.value }; }
@@ -113,6 +75,7 @@
     keyboardToggle.disabled = !previewEditable || !keyboard;
     byId("source-count").textContent = latex.length + " / " + core.MAX_SOURCE_LENGTH;
     byId("source-count").classList.toggle("over-limit", latex.length > core.MAX_SOURCE_LENGTH);
+    if (matrixController) matrixController.refresh();
   }
 
   function changed() {
@@ -416,38 +379,12 @@
       fromVisual();
     });
   });
-  exampleGroups.forEach((group, index) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.id = "example-domain-" + group.id;
-    button.textContent = group.label;
-    button.setAttribute("role", "tab");
-    button.setAttribute("aria-controls", "example-panel");
-    button.addEventListener("click", () => selectExampleGroup(index));
-    button.addEventListener("keydown", (event) => {
-      let nextIndex;
-      if (event.key === "ArrowRight") nextIndex = (index + 1) % exampleGroups.length;
-      else if (event.key === "ArrowLeft") nextIndex = (index - 1 + exampleGroups.length) % exampleGroups.length;
-      else if (event.key === "Home") nextIndex = 0;
-      else if (event.key === "End") nextIndex = exampleGroups.length - 1;
-      else return;
-      event.preventDefault();
-      selectExampleGroup(nextIndex);
-      exampleDomains.children[nextIndex].focus();
-    });
-    exampleDomains.appendChild(button);
-  });
-  selectExampleGroup(0);
-  examplePrev.addEventListener("click", () => {
-    examplePageIndex -= 1;
-    renderExamples();
-    if (examplePrev.disabled) exampleNext.focus();
-  });
-  exampleNext.addEventListener("click", () => {
-    examplePageIndex += 1;
-    renderExamples();
-    if (exampleNext.disabled) examplePrev.focus();
-  });
+  window.FormulaDeskLibraryUI.init({ snapshot, load(example) {
+    replaceContents(example, "已载入“" + example.title + "”。");
+    if (previewEditable && mf) mf.focus();
+  } });
+  matrixController = window.FormulaDeskMatrix.init({ mf, canEdit: () => previewEditable && Boolean(mf),
+    snapshot: () => ({ ...snapshot(), revision }), remember(value) { previous = { latex: value.latex, note: value.note }; }, sync: fromVisual });
   undoButton.addEventListener("click", () => { mf.executeCommand("undo"); fromVisual(); mf.focus(); });
   redoButton.addEventListener("click", () => { mf.executeCommand("redo"); fromVisual(); mf.focus(); });
   // Keep the mathfield connected to its keyboard while clearing with a pointer.

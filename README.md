@@ -19,9 +19,9 @@
 
 ## 获取与打开
 
-**Windows 浮窗：** 从[发布页](https://github.com/hezhiheng1999/FormulaDesk/releases/latest)下载 `formuladesk-1.5.1-win-x64.zip`，完整解压到可写文件夹，双击 `FormulaDesk.exe`。需要 Windows 10/11 x64、.NET Framework 4.8 系列及系统 WebView2 Runtime；本机实测 Windows 11。浮窗默认置顶，点击图钉可关闭；复制后点击目标应用输入框粘贴。Release 单独附带的 EXE 是主程序，需要 ZIP 中的同目录资源和组件，不能单独运行。
+**Windows 浮窗：** 从[发布页](https://github.com/hezhiheng1999/FormulaDesk/releases/latest)下载 `formuladesk-1.6.0-win-x64.zip`，完整解压到可写文件夹，双击 `FormulaDesk.exe`。需要 Windows 10/11 x64、.NET Framework 4.8 系列及系统 WebView2 Runtime；本机实测 Windows 11。浮窗默认置顶，点击图钉可关闭；复制后点击目标应用输入框粘贴。Release 单独附带的 EXE 是主程序，需要 ZIP 中的同目录资源和组件，不能单独运行。
 
-**独立网页：** 下载 `formuladesk-1.5.1-portable.zip`，完整解压，双击 `index.html`。Windows 也可双击 `open-formuladesk.cmd`。不要直接运行压缩包内的文件。
+**独立网页：** 下载 `formuladesk-1.6.0-portable.zip`，完整解压，双击 `index.html`。Windows 也可双击 `open-formuladesk.cmd`。不要直接运行压缩包内的文件。
 
 如果拿到的是已制作好的 source ZIP，其中也带有成品 HTML，可以直接打开。通过 Git 克隆源码则先按下面步骤构建；仓库不保存自动生成的 HTML。
 
@@ -47,6 +47,12 @@ python build.py
 
 清空或载入示例会替换当前公式与说明，可通过“恢复上次内容”找回最近一次替换前的完整内容。公式内的撤销/重做用于可视化公式编辑，不是永久历史记录。
 
+### 公式库与矩阵
+
+常用公式包含 12 个领域、各 30 条预设，可搜索、翻页。在“管理”里可以新增领域和公式，直接输入公式，修改内置或自建公式的名称、LaTeX 和说明，重命名领域及调整顺序。点击“保存修改”集中保存；“取消修改”放弃本轮修改。浏览和管理库不会替换当前工作区，只有载入公式时才替换。
+
+矩阵按钮可选择 1–10 行、1–10 列和括号后插入。光标放在已有矩阵中，可在当前行列前后添加，或确认删除当前行列；支持撤销、重做及恢复上次完整内容。[操作与迁移说明](docs/QUICKSTART.md)
+
 ### Windows 浮窗与工作单
 
 - 按 `Ctrl+Alt+F` 唤出浮窗。在浮窗内再按一次会隐藏，公式、说明、面板和图钉状态随窗口保留。关闭按钮退出程序。
@@ -68,6 +74,8 @@ python build.py
 ## 离线与隐私
 
 运行资源全部内嵌，内容策略禁止网络连接、外部资源和表单提交。不自动保存输入、不调用 AI API、不自动读取剪贴板；复制操作写入系统剪贴板。
+
+公式库只在主动保存时持久化：浮窗写入程序旁的 `FormulaDesk.library.json`，网页写入当前浏览器的本地存储。它们与工作单分开，均可导入、导出同一种 JSON 备份。清理浏览器数据或迁移前请导出；更新浮窗时可导入旧库，升级不会自动合并或覆盖自定义目录。
 
 将公式粘贴到外部应用之后，后续数据处理由目标应用负责。系统剪贴板可能被其他应用访问。完整说明与报告方式见 [SECURITY.md](SECURITY.md)。
 

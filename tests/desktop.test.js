@@ -6,7 +6,7 @@ const path = require("node:path");
 const vm = require("node:vm");
 
 test("application entry scripts parse before being bundled together", () => {
-  for (const file of ["desktop.js", "app.js"]) {
+  for (const file of ["desktop.js", "app.js", "library.js", "library-ui.js", "matrix.js"]) {
     new vm.Script(fs.readFileSync(path.join(__dirname, "../src", file), "utf8"), { filename: file });
   }
 });

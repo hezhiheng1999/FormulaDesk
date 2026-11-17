@@ -53,7 +53,7 @@
     event.stopPropagation();
     if (!event.repeat) requestWorksheet(key === "o" ? "open" : "save");
   }, true);
-  const panels = { examples, source, help };
+  const panels = { examples, source, help, matrix: document.getElementById("matrix-panel") };
   const bar = document.createElement("nav");
   bar.id = "desktop-tabs";
   bar.className = "example-domains";
@@ -65,7 +65,7 @@
   let pending = false;
   let previous = "";
   const buttons = {};
-  const labels = { examples: "常用公式", source: "LaTeX源码和补充说明", help: "使用方法" };
+  const labels = { examples: "常用公式", source: "LaTeX源码和补充说明", help: "使用方法", matrix: "矩阵" };
 
   function select(name) {
     active = name;
@@ -76,6 +76,7 @@
       buttons[key].setAttribute("aria-expanded", String(key === name));
       buttons[key].classList.toggle("selected", key === name);
     }
+    document.getElementById("matrix-toggle").setAttribute("aria-expanded", String(name === "matrix"));
     report();
   }
 
@@ -100,6 +101,7 @@
     if (!panel.id) panel.id = "desktop-" + name;
     const button = document.createElement("button");
     button.type = "button";
+    if (name === "matrix") button.hidden = true;
     button.textContent = labels[name];
     button.setAttribute("aria-controls", panel.id);
     button.setAttribute("aria-expanded", "false");

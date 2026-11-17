@@ -49,7 +49,7 @@
         <button type="button" data-insert="#@_{#0}" aria-label="插入下标" disabled><svg class="icon" aria-hidden="true"><use href="#icon-subscript"/></svg><span>下标</span></button>
         <button type="button" data-insert="\sum_{#0}^{#0}#0" aria-label="插入求和" disabled><svg class="icon" aria-hidden="true"><use href="#icon-sum"/></svg><span>求和</span></button>
         <button type="button" data-insert="\int_{#0}^{#0}#0\,\mathrm{d}x" aria-label="插入积分" disabled><svg class="icon" aria-hidden="true"><use href="#icon-integral"/></svg><span>积分</span></button>
-        <button type="button" data-insert="\begin{bmatrix}#0 &amp; #0 \\ #0 &amp; #0\end{bmatrix}" title="插入 2×2 矩阵" aria-label="插入矩阵" disabled><svg class="icon" aria-hidden="true"><use href="#icon-matrix"/></svg><span>矩阵</span></button>
+        <button id="matrix-toggle" type="button" title="插入或编辑矩阵" aria-label="插入或编辑矩阵" aria-expanded="false" aria-controls="matrix-panel" disabled><svg class="icon" aria-hidden="true"><use href="#icon-matrix"/></svg><span>矩阵</span></button>
         <button type="button" data-insert="\left|#0\right|" aria-label="插入模" disabled><svg class="icon" aria-hidden="true"><use href="#icon-absolute"/></svg><span>模</span></button>
       </div>
       <div id="mathfield-host" class="mathfield-host"><p id="preview-state" role="status">正在准备公式编辑器…</p></div>
@@ -60,10 +60,15 @@
       <div id="manual-copy" class="manual-copy" hidden><label for="manual-copy-text">点击时的完整内容（已选中）</label><textarea id="manual-copy-text" readonly spellcheck="false"></textarea></div>
     </section>
 
+    <section id="matrix-panel" class="matrix-panel" aria-label="矩阵操作" hidden>
+      <div class="matrix-heading"><strong>矩阵</strong><button id="matrix-close" type="button">关闭</button></div>
+      <div class="matrix-new"><label>行数<input id="matrix-rows" type="number" min="1" max="10" value="2"></label><label>列数<input id="matrix-cols" type="number" min="1" max="10" value="2"></label><label>括号<select id="matrix-brackets"><option value="bmatrix">方括号 [ ]</option><option value="pmatrix">圆括号 ( )</option><option value="vmatrix">行列式 | |</option><option value="matrix">无括号</option></select></label><button id="matrix-insert" type="button">插入新矩阵</button></div>
+      <p id="matrix-context"></p><div class="matrix-commands"><button type="button" data-matrix-command="addRowBefore">上方加行</button><button type="button" data-matrix-command="addRowAfter">下方加行</button><button type="button" data-matrix-command="addColumnBefore">左侧加列</button><button type="button" data-matrix-command="addColumnAfter">右侧加列</button><button type="button" data-matrix-command="removeRow">删除当前行</button><button type="button" data-matrix-command="removeColumn">删除当前列</button></div>
+      <div id="matrix-confirm" hidden><strong id="matrix-removal-summary"></strong><p id="matrix-removal-content"></p><div class="matrix-heading"><button id="matrix-cancel-delete" type="button">取消删除</button><button id="matrix-confirm-delete" type="button">确认删除</button></div><p>删除后可撤销，或点“恢复上次内容”恢复整条公式与说明。</p></div>
+      <p id="matrix-status" role="status" aria-live="polite"></p>
+    </section>
     <section class="examples-card" aria-labelledby="examples-heading"><div class="examples-heading"><h2 id="examples-heading">常用公式</h2></div>
-      <div id="example-domains" class="example-domains" role="tablist" aria-label="公式使用领域"></div>
-      <div id="example-panel" role="tabpanel" tabindex="0"><div id="example-list" class="example-list"></div></div>
-      <nav class="example-pagination" aria-label="常用公式翻页"><button id="example-prev" class="icon-action" type="button" title="上一页" aria-label="上一页" disabled><svg class="icon" aria-hidden="true"><use href="#icon-chevron-left"/></svg></button><span id="example-page" role="status" aria-live="polite"></span><button id="example-next" class="icon-action" type="button" title="下一页" aria-label="下一页" disabled><svg class="icon" aria-hidden="true"><use href="#icon-chevron-right"/></svg></button></nav>
+      <div id="formula-library"></div>
     </section>
 
     <details id="output-panel" class="disclosure-card"><summary>LaTeX源码和补充说明</summary><div class="output-content">

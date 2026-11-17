@@ -1,59 +1,50 @@
 {
-  "recorded_on": "2026-11-13",
+  "recorded_on": "2026-11-17",
   "project": "FormulaDesk",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "mathlive_version": "0.111.1",
-  "scope": "FD-004. Release-binary and portable-browser checks, followed separately by the user-accepted trial results.",
+  "scope": "FD-005 user-accepted library and matrix improvements; final version-only release build, package validation and Windows smoke checks.",
   "bundle": {
     "file": "index.html",
-    "sha256": "033594f2901decfbe7552dc8fb980746a55466587fca11d1bf074a9ae3e775ff",
-    "bytes": 1276304
+    "sha256": "75f37c41154d0b072b5b47ab53124cd5a1dcb8ba93307d9e86f12228d832d9d0",
+    "bytes": 1421333
   },
   "environment": {
-    "os": "Windows 11 x64 26H2 build 26300.9974",
-    "release_system_scale_percent": 100,
-    "webview2_and_edge": "157.0.4341.46",
+    "os": "Windows 11 x64",
+    "system_scale_percent": 100,
     "webview2_sdk": "1.0.4314.35",
     "python": "3.12.4",
     "node": "v24.18.0",
-    "exe_file_version": "1.5.1.0",
-    "exe_sha256": "3792a8aa3b70efe5354be63b066f4775b75c1c6adc81b844b5c795a6ad148258"
+    "exe_file_version": "1.6.0.0",
+    "exe_sha256": "f60dd97f7554e9bd051097753537afa08d2058f372ba836caf0ce409c3a03d03"
   },
   "automated": {
-    "node_passed": 36,
-    "python_passed": 27,
+    "node_passed": 47,
+    "python_passed": 28,
     "skipped_local": 0,
     "embedded_fonts": 20,
     "external_html_assets": 0
   },
-  "release_build": {
-    "native": "Original 1.5.1.0 EXE on WebView2. First direct key and clear to each panel to key passed. Two rapid clicks produced two symbols. Ordinary input and clear retained a constant field and viewport height. Nested fractions grew and cleared back to one line.",
-    "native_window_width_px": [
-      400,
-      560
-    ],
-    "keyboard_page_panel_pairs_per_width": 12,
-    "keyboard_page_height_css_px": 227,
-    "greek_names": 31,
-    "editor_at_560": "Source and note retain editing focus, explicit symbol targets the formula, long-press select and cancel, fraction Tab and Tab exit, long formula horizontal scroll, invalid raw LaTeX preservation and help panel scroll.",
-    "portable_browser": "Standalone headless Edge opened the HTML extracted from the browser portable ZIP via file URL. Note editing survived a keyboard layout change. Quick symbol presses and Greek input after clearing and selecting a domain passed."
-  },
   "accepted_trial": {
-    "html_sha256": "7f8f6aacfc695aea80b06a8954ee04acf4969932ba1290dc227dfea2b953e0c5",
-    "verified_release_html_delta": "Only the displayed footer version changes from 1.5.0 to 1.5.1.",
-    "user_feedback": "User confirmed first keyboard input, input after clearing and selecting a panel, and stable clearing.",
-    "native_mouse": "The same Windows mouse click activated the original and trial windows. Only the trial received the first symbol. The trial also received a symbol after clear and panel navigation.",
-    "native_geometry": "At 100% system scale, simultaneous WebView frame and Win32 window measurements at contiguous ordinary edit and clear showed constant window heights of 517 px at width 400 and 483 px at width 560. Clearing a nested fraction contracted once from 548 to 517 and 514 to 483 px respectively.",
-    "additional_webview_render_scale_percent": [
-      125,
-      150
-    ],
-    "integration": "Both copy modes pasted exactly into an independent WinForms textbox. A worksheet was saved and reopened via native file dialogs. The global hotkey hid and showed the same window, and a repeat launch restored the window with its contents."
+    "html_sha256": "555fb3e28a514bcbbafdf56f3cad374a46a95697be9eb6de586edd7560c4b668",
+    "release_html_delta": "Only displayed footer version 1.5.1 to 1.6.0; byte-for-byte equality after this replacement.",
+    "catalog": "12 domains with 30 entries each; all 360 checked for distinct IDs, parser, markup and copy payloads. Separate domain reviews and representative numerical checks; not a formal mathematical proof.",
+    "library_web": "Manual add; edit built-in name/source/note; domain rename/add/reorder; search/pagination; save/reload; real export/import preserving raw fields and workspace.",
+    "library_native": "400/560 px manual entry, names and focus; import, save, close/reopen same EXE, export with exact saved-document match; 400 px native confirmation cancel/accept, deletion undo and cancel all modifications.",
+    "failure_paths": "Controller tests for storage rejection/retry and recovery authorization; real Windows I/O for locked target, atomic replacement, strict UTF-8, size bounds, valid backup preservation and damaged original archiving.",
+    "matrix": "1x1/2x3/10x10; nested fractions and multiple matrices; selection-invalidated confirmation; delete/cancel/undo/redo/full restore. Column-placeholder regression failed with four instead of six, then passed for left/right columns, typing, Tab and exact-source undo/redo.",
+    "clipboard": "Real paste into independent WinForms textbox. Restored LaTeX exact; formula-and-note normalized accessibility text exact and line breaks visually checked.",
+    "native_regression": "560 px stable first input; 400 px direct input after clear and four keyboard pages at 517 px window height; Ctrl+S/Ctrl+O dialogs cancel without changing content. Hotkey conflict warning verified."
+  },
+  "release_build": {
+    "native": "Original toolbar appearance; new 2x3 matrix has six visible input placeholders on Windows 560 px. Catalog and installed shortcut smoke checks recorded separately from trial evidence."
   },
   "limits": [
-    "During actual growth of a tall formula, the page can briefly show a scrollbar while the native host grows.",
-    "The 125% and 150% checks changed WebView2 rendering scale only. Windows 10, system DPI changes and mixed-DPI monitor moves were not retested for FD-004."
+    "Windows 10, system DPI changes, mixed-DPI moves and other browsers not retested.",
+    "Full keyboard long-press, conflict-free global hotkey and worksheet reopen use prior FD-004/FD-003 evidence; not counted as this task native reruns.",
+    "Browser storage failures and damaged recovery are controller/file tests, not exhaustive native UI tests.",
+    "Formula review and rendering do not establish universal mathematical correctness."
   ],
-  "release_url": "https://github.com/hezhiheng1999/FormulaDesk/releases/tag/v1.5.1",
+  "release_url": "https://github.com/hezhiheng1999/FormulaDesk/releases/tag/v1.6.0",
   "remote_ci_url": "https://github.com/hezhiheng1999/FormulaDesk/actions"
 }

@@ -6,6 +6,9 @@
 src/core.js        输入规则、分隔符处理、长度/嵌套边界与复制文本
 src/app.js         MathLive、DOM、剪贴板、恢复与离开提醒
 src/examples.js    按领域分类的公式示例，与 app.js 合入同一应用脚本
+src/library.js     公式库格式、限额、唯一 ID、原文往返与排序
+src/library-ui.js  浏览/管理副本、显式保存、导入导出与恢复
+src/matrix.js      固定 MathLive 矩阵定位、尺寸及可撤销结构操作
 src/template.html  页面语义与控件
 src/app.css        响应式布局
 vendor/           MathLive 固定版本与字体，禁止手动修改
@@ -60,3 +63,11 @@ python tools/build_windows.py --sdk-package path/to/microsoft.web.webview2.1.0.4
 Windows 浮窗使用 WinForms PerMonitorV2 配置。宿主以 96 DPI 逻辑单位保存面板收起基线，网页上报的 CSS 尺寸仅按 devicePixelRatio 转换一次。单实例使用会话内具名互斥量和自动重置信号，名称根据实际便携目录和用户 SID 的哈希生成。
 
 工作单的文件和快照接口见[实施计划](fd-003-plan.md)。宿主在 WebView2 回调退出后启动原生文件选择框。打开时验证完整文件和当前快照版本，保存时只确认捕获的版本。编译清单和公开源码白名单均包含 WindowMetrics、SingleInstance 和 WorksheetStore。
+
+公式库与矩阵的格式和接口见 [FD-005 设计](fd-005-design.md)及[计划](fd-005-plan.md)。`LibraryStore.cs` 对默认库、备份及导入文件执行 UTF-8/大小/格式信封检查；完整目录由 JavaScript 模型检查。库请求与工作单文件操作互斥，独立管理未保存状态。普通启动不创建库文件，保存采用同目录原子替换；恢复已被前端判为损坏的文件时单独归档，不覆盖有效备份。
+
+库管理确认框使用 Windows 原生对话框，避免 WebView 默认对话框在 400 像素视图中裁切按钮。宿主关闭默认脚本对话框，以 `ScriptDialogOpening` 接收已校验来源的请求，通过 deferral 和 `BeginInvoke` 离开 WebView 回调后显示；只有明确确认才调用 `Accept()`。[WebView2 接口说明](https://learn.microsoft.com/en-us/dotnet/api/microsoft.web.webview2.core.corewebview2settings.aredefaultscriptdialogsenabled)
+
+固定 MathLive 的加行命令自动创建输入空位，加列命令只创建空单元格。矩阵控制器在同一次撤销事务中，仅为新增列插入 `\placeholder{}`，然后选择光标所在行的新格；保留原有单元格内容，不重写整条公式。
+
+矩阵上下文使用固定 0.111.1 的模型接口；结构命令本身没有完整的操作后撤销快照，控制器为每次增删记录一次完成状态。升级 MathLive 时需实际复测嵌套矩阵定位、增删与撤销/重做，不仅检查模板字符串。私有库、备份和运行缓存均不在发布白名单中。

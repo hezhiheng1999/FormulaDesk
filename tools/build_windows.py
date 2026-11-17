@@ -61,6 +61,9 @@ def build_windows(sdk_package, output):
         (stage / "使用说明.txt").write_text(
             "FormulaDesk " + version + " Windows x64 便携版\n"
             "完整解压到可写文件夹后，双击 FormulaDesk.exe。\n"
+            "常用公式 → 管理：新增公式、修改名称和内容、管理领域；保存修改后保留到下次启动。\n"
+            "私人库为程序旁的 FormulaDesk.library.json；换电脑可带走该文件，或在公式库中导入/导出。\n"
+            "点击模板栏的矩阵，可选择新矩阵尺寸；光标放入已有矩阵后，可增删当前行列。\n"
             "需要 Windows 10/11 x64、.NET Framework 4.8 系列和系统 WebView2 Runtime。\n"
             "标题栏图钉位于最小化按钮左侧，蓝色直立表示置顶开启，灰色倾斜表示关闭。\n"
             "点击下方标签展开内容，再点同一标签收起。复制后点回目标输入框粘贴。\n"
@@ -92,7 +95,7 @@ def build_windows(sdk_package, output):
                     ("Microsoft.Web.WebView2.Core.dll", "Microsoft.Web.WebView2.WinForms.dll")]
         command += [str(ROOT / "src/windows" / name) for name in
                     ("Program.cs", "WindowHeight.cs", "WindowMetrics.cs", "PinToggle.cs", "SingleInstance.cs",
-                     "WorksheetStore.cs")]
+                     "WorksheetStore.cs", "LibraryStore.cs")]
         command.append(str(metadata))
         subprocess.run(command, check=True)
         receipt = {"version": version, "sdk": SDK_VERSION, "architecture": "x64", "files": {}}

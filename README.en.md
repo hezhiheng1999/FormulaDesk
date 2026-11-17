@@ -8,9 +8,9 @@ A portable, offline visual LaTeX editor for AI conversations and documents. Writ
 
 ## Run
 
-**Windows floating window:** download `formuladesk-1.5.1-win-x64.zip` from the [latest release](https://github.com/hezhiheng1999/FormulaDesk/releases/latest), extract it completely to a writable folder, and double-click `FormulaDesk.exe`. Requires Windows 10/11 x64, .NET Framework 4.8 and an existing system WebView2 Runtime. The pin starts enabled. Copy, click the destination input and paste. The separate EXE attachment requires the files from the ZIP and cannot run alone. Runtime cache is stored in the adjacent `WebView2Data` folder. To keep a formula and note, save a worksheet.
+**Windows floating window:** download `formuladesk-1.6.0-win-x64.zip` from the [latest release](https://github.com/hezhiheng1999/FormulaDesk/releases/latest), extract it completely to a writable folder, and double-click `FormulaDesk.exe`. Requires Windows 10/11 x64, .NET Framework 4.8 and an existing system WebView2 Runtime. The pin starts enabled. Copy, click the destination input and paste. The separate EXE attachment requires the files from the ZIP and cannot run alone. Runtime cache is stored in the adjacent `WebView2Data` folder. To keep a formula and note, save a worksheet.
 
-**Browser edition:** extract `formuladesk-1.5.1-portable.zip` and open `index.html`. On Windows, `open-formuladesk.cmd` opens it with the default browser. No account, API key, package manager, or background server is required.
+**Browser edition:** extract `formuladesk-1.6.0-portable.zip` and open `index.html`. On Windows, `open-formuladesk.cmd` opens it with the default browser. No account, API key, package manager, or background server is required.
 
 A prepared source ZIP also contains the generated HTML. When cloning the source repository, run `python build.py` using Python 3.10+. Build dependencies are vendored, so the normal build is offline. Node.js 20+ is required only for tests.
 
@@ -26,6 +26,8 @@ The interface is currently in Simplified Chinese. Browser behavior outside the t
 If automatic copying is unavailable, select **手动复制** (manual copy), press Ctrl/Command+C, and paste. The application does not read the clipboard to verify its contents. A successful browser API response is not a guarantee of what another application will paste.
 
 The **恢复上次内容** control restores the formula and note after clearing the editor, loading an example, or opening a worksheet. Copy important work before closing or refreshing, or save a worksheet in the Windows edition.
+
+The library includes an editable library of 360 presets across 12 domains. **管理** lets you add formulas by typing, edit preset names/source/notes, rename domains, and reorder entries. Changes are applied together with **保存修改**. Windows stores the library beside the EXE as `FormulaDesk.library.json`; the browser uses origin-local storage. Both can import/export the same JSON backup. Workspace drafts remain separate and are not saved automatically. The **矩阵** button inserts 1–10 rows/columns and provides explicit row/column operations with deletion confirmation, undo/redo and full-content restoration.
 
 ## Windows shortcuts and worksheets
 
