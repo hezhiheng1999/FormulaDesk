@@ -4,7 +4,7 @@ FormulaDesk 1.6.0 使用 MathLive 0.111.1。正式构建的结果和 HTML、EXE 
 
 ## v1.6.0 / FD-005
 
-发布提交 `0d78fd1` 的主分支和标签 CI 各 6/6，通过标签发布打包检查。六个附件已上传，GitHub 返回的服务端 SHA-256 和大小全部与本地资产一致；完整下载回读因附件服务器 TLS 超时尚未完成。Windows 包含 12 个成员、网页包 5 个、源码包 90 个。源码包解压离线重建与正式 HTML 相同；13 个历史 ZIP 摘要未变。已从与公开资产摘要一致的本地发布包部署并核对 1.6.0.0 EXE 和全部清单成员，桌面快捷方式已指向新版。[Release](https://github.com/hezhiheng1999/FormulaDesk/releases/tag/v1.6.0) · [主分支 CI](https://github.com/hezhiheng1999/FormulaDesk/actions/runs/44064286036) · [标签 CI](https://github.com/hezhiheng1999/FormulaDesk/actions/runs/44064293883)
+发布提交 `0d78fd1` 的主分支和标签 CI 各 6/6，通过标签发布打包检查。六个附件已完整下载，与原发布资产逐字节一致，大小及 GitHub 服务端 SHA-256 全部匹配；下载的校验清单、报告、ZIP CRC/成员以及源码与 v1.6.0 标签的内容也均通过核对。原附件 CDN 域名的 TLS 故障仍在，本次使用 GitHub 签名跳转指明的官方 Azure 源站下载，保持证书校验，未修改系统代理或 DNS。Windows 包含 12 个成员、网页包 5 个、源码包 90 个。源码包解压离线重建与正式 HTML 相同；13 个历史 ZIP 摘要未变。已从与公开资产摘要一致的本地发布包部署并核对 1.6.0.0 EXE 和全部清单成员，桌面快捷方式已指向新版。[Release](https://github.com/hezhiheng1999/FormulaDesk/releases/tag/v1.6.0) · [主分支 CI](https://github.com/hezhiheng1999/FormulaDesk/actions/runs/44064286036) · [标签 CI](https://github.com/hezhiheng1999/FormulaDesk/actions/runs/44064293883)
 
 正式构建重新通过 Node 47/47、Python 28/28（无跳过）、离线编译及成品检查。正式 HTML 为 1,421,333 字节，SHA-256 为 `75f37c41154d0b072b5b47ab53124cd5a1dcb8ba93307d9e86f12228d832d9d0`；与用户验收的最终试用 HTML 逐字节比较，仅页脚版本号从 1.5.1 改为 1.6.0。下列记录描述同一运行代码的实施、试用修正与验证范围。
 
